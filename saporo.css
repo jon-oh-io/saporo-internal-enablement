@@ -55,8 +55,9 @@ header {
   backdrop-filter: blur(10px);
 }
 .nav-wrap {
-  max-width: var(--content-max);
-  margin: 0 auto;
+  max-width: none;          /* header/footer span the full window width */
+  width: 100%;
+  margin: 0;
   padding: 0 var(--content-pad);
   display: flex;
   align-items: center;
