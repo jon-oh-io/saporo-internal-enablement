@@ -1,0 +1,111 @@
+/* ============================================================
+   Saporo Internal Enablement — shared "chrome" stylesheet
+   Brand tokens, base reset, header/nav, and footer.
+   Every page links this so the theme + navigation stay
+   consistent. Page-specific styles live in each page's own
+   <style> block.
+   ============================================================ */
+
+/* ── Brand tokens (official Saporo palette) ─────────────────── */
+:root {
+  --bg:         #12141D;   /* brand dark        */
+  --bg-2:       #181B25;
+  --bg-3:       #20242F;
+  --bg-4:       #252A34;   /* brand slate       */
+  --off-white:  #F5F6FA;
+  --cream:      #C9CCD6;
+  --coral:      #FF715B;   /* primary accent    */
+  --orange:     #FF934F;
+  --purple:     #5132C0;   /* secondary accent  */
+  --violet:     #8F2DF0;
+  --blue:       #3C5CCF;
+  --green:      #3CCF91;
+  --gray:       #6E7385;
+  --gray-light: #9AA0B0;
+  --gray-dim:   #3A3F4D;
+  --border:     #2A2F3B;
+  --grad:       linear-gradient(120deg, #FF715B 0%, #8F2DF0 55%, #5132C0 100%);
+
+  /* layout — pages may override to match their content width */
+  --content-max: 880px;
+  --content-pad: 2rem;
+}
+
+/* ── Base reset ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--off-white);
+  line-height: 1.7;
+  font-size: 16px;
+  min-height: 100vh;
+}
+a { color: inherit; text-decoration: none; }
+
+/* ── Header / persistent nav ────────────────────────────────── */
+header {
+  background: rgba(18,20,29,0.72);
+  border-bottom: 1px solid var(--border);
+  padding: 1.3rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+}
+.nav-wrap {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 var(--content-pad);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo-link { display: inline-flex; align-items: center; gap: 0.7rem; text-decoration: none; }
+.logo-mark { width: 34px; height: 34px; display: block; flex-shrink: 0; }
+.logo-text { display: flex; flex-direction: column; line-height: 1; }
+.logo-word { font-size: 1.3rem; font-weight: 800; letter-spacing: 0.02em; color: var(--off-white); }
+.logo-tag {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--coral);
+  margin-top: 3px;
+}
+.site-nav { display: flex; align-items: center; gap: 1.75rem; }
+.site-nav a {
+  position: relative;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gray-light);
+  text-decoration: none;
+  padding: 0.25rem 0;
+  transition: color 0.15s;
+}
+.site-nav a:hover { color: var(--off-white); }
+.site-nav a.active { color: var(--off-white); }
+.site-nav a.active::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -3px;
+  height: 2px;
+  background: var(--grad);
+}
+
+/* ── Footer ─────────────────────────────────────────────────── */
+footer { border-top: 1px solid var(--border); padding: 2.5rem 0; }
+footer .nav-wrap { flex-wrap: wrap; gap: 1rem; }
+.footer-left .logo-word { font-size: 1.05rem; }
+footer p { font-size: 0.78rem; color: var(--gray); }
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 720px) {
+  .site-nav { gap: 1.1rem; }
+  .site-nav a { font-size: 0.7rem; letter-spacing: 0.05em; }
+}
