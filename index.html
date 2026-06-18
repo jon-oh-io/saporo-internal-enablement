@@ -153,55 +153,6 @@
     .featured-cta svg { transition: transform 0.18s; }
     .featured:hover .featured-cta svg { transform: translateX(4px); }
 
-    /* Upcoming resource grid */
-    .upcoming-label {
-      font-family: 'Roboto Mono', monospace;
-      font-size: 0.72rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--gray);
-      margin: 3.5rem 0 1.5rem;
-    }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-    .card { background: var(--bg-2); padding: 1.5rem; }
-    .card.soon { opacity: 0.62; }
-    .card-icon {
-      width: 36px; height: 36px;
-      background: var(--bg-4);
-      border: 1px solid var(--gray-dim);
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 1rem;
-      color: var(--coral);
-    }
-    .card h3 {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--off-white);
-      margin-bottom: 0.35rem;
-      letter-spacing: -0.01em;
-      display: flex; align-items: center; gap: 0.5rem;
-    }
-    .card .badge {
-      font-family: 'Roboto Mono', monospace;
-      font-size: 0.56rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--gray);
-      border: 1px solid var(--gray-dim);
-      border-radius: 100px;
-      padding: 0.12rem 0.45rem;
-    }
-    .card p { font-size: 0.8rem; color: var(--gray-light); line-height: 1.5; }
-
     @media (max-width: 720px) {
       .hero { padding: 4rem 0 3rem; }
       .hero h1 { font-size: 2.2rem; }
@@ -271,7 +222,7 @@
           <h3>Competitive Intelligence Lookup</h3>
           <p>A live-call reference for the security landscape — 40 competitors and adjacent tools with positioning and "what to say," plus a searchable acronym glossary.</p>
           <div class="featured-meta">
-            <span>45 tools</span>
+            <span>46 tools</span>
             <span>Acronym glossary</span>
             <span>Live-call ready</span>
           </div>
@@ -282,38 +233,6 @@
         </span>
       </a>
 
-      <!-- Upcoming resources -->
-      <p class="upcoming-label">// more coming soon</p>
-      <div class="cards">
-        <div class="card soon">
-          <div class="card-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 4h14a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-4 4V5a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-          </div>
-          <h3>Prompt Library <span class="badge">Soon</span></h3>
-          <p>Copy-and-go prompts for the team's most common tasks — research, summaries, and reporting.</p>
-        </div>
-        <div class="card soon">
-          <div class="card-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 5h16M4 12h16M4 19h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-          </div>
-          <h3>Output Templates <span class="badge">Soon</span></h3>
-          <p>Reusable structures for reports, customer-facing docs, and security findings write-ups.</p>
-        </div>
-        <div class="card soon">
-          <div class="card-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 4h9l5 5v11H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 4v5h5" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-          </div>
-          <h3>Playbooks <span class="badge">Soon</span></h3>
-          <p>Step-by-step workflows for recurring processes, from research prep to follow-ups.</p>
-        </div>
-        <div class="card soon">
-          <div class="card-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3 4 6v6c0 4.4 3.2 7.6 8 9 4.8-1.4 8-4.6 8-9V6l-8-3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-          </div>
-          <h3>Safe-Use Guidelines <span class="badge">Soon</span></h3>
-          <p>What's OK to share with Claude, customer-data handling, and confidentiality do's & don'ts.</p>
-        </div>
-      </div>
     </div>
   </section>
 

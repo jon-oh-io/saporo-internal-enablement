@@ -200,11 +200,11 @@
       <div class="page-title">Security Landscape Reference</div>
       <div class="page-subtitle">Tools, competitive positioning, and acronym glossary — for use on live calls.</div>
     </div>
-    <span class="count-pill" id="countBadge">45 tools</span>
+    <span class="count-pill" id="countBadge">46 tools</span>
   </div>
 
   <div class="tab-bar">
-    <button class="tab-btn active" onclick="showTab('tools',this)">Tools (45)</button>
+    <button class="tab-btn active" onclick="showTab('tools',this)">Tools (46)</button>
     <button class="tab-btn" onclick="showTab('glossary',this)">Acronym Glossary</button>
   </div>
 
@@ -247,6 +247,19 @@
           <div class="section"><div class="section-label">What they do</div><div class="section-text">Free, French-rooted reporting built on BloodHound / Neo4j data — community attack-path reports for Active Directory. Manual, point-in-time.</div></div>
           <div class="divider"></div>
           <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"AD Miner produces useful attack-path reports off BloodHound/Neo4j data, but it's a free, manual reporting layer. Saporo is a supported platform with native collection, chokepoint prioritization, scheduled re-evaluation, and ANSSI/CIS alignment — findings you can operationalize, not just read."</p></div></div>
+        </div>
+      </div>
+
+      <!-- ANSSI ORADAD -->
+      <div class="card" data-cat="ad" data-rel="adjacent" data-name="anssi oradad ad data collector" data-tags="active directory collector anssi audit france framework cis posture">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-adjacent"></span><span class="comp-name">ANSSI ORADAD</span><span class="cat-tag">AD Posture</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-adjacent">Adjacent / sometimes compared</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">ANSSI's open-source Active Directory data collector — gathers raw directory data for offline analysis. A collection tool, not a prioritization or remediation product.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"ORADAD collects the AD data — it doesn't tell you what to fix first. Saporo does posture-first analysis and prioritization on top: chained attack paths, chokepoints, and framework-mapped evidence (ANSSI/CIS) — not raw collection or change logs."</p></div></div>
         </div>
       </div>
 
@@ -495,13 +508,13 @@
       </div>
 
       <!-- NETWRIX -->
-      <div class="card" data-cat="ad" data-rel="neutral" data-name="netwrix" data-tags="active directory auditing change detection compliance">
+      <div class="card" data-cat="ad" data-rel="neutral" data-name="netwrix change auditor" data-tags="active directory auditing change detection compliance change auditor pingcastle">
         <div class="card-header" onclick="toggle(this)">
-          <span class="rel-dot rel-neutral"></span><span class="comp-name">Netwrix</span><span class="cat-tag">AD Auditing</span><span class="chevron">&#9660;</span>
+          <span class="rel-dot rel-neutral"></span><span class="comp-name">Netwrix (Change Auditor)</span><span class="cat-tag">AD Auditing</span><span class="chevron">&#9660;</span>
         </div>
         <div class="card-body">
           <span class="rel-label rel-label-neutral">Context / already in account</span>
-          <div class="section"><div class="section-label">What they do</div><div class="section-text">AD auditing, change detection, data access governance, compliance reporting. Primarily answers "who changed what in AD" and generates audit evidence.</div></div>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">AD auditing &amp; change detection (incl. Change Auditor), data access governance, and compliance reporting; now also owns PingCastle. Primarily answers "who changed what in AD" and generates audit evidence.</div></div>
           <div class="divider"></div>
           <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Netwrix tells you what changed after the fact. Saporo tells you what those configurations enable from an attacker's perspective — proactively. Completely different use case."</div></div>
         </div>
@@ -690,15 +703,15 @@
       </div>
 
       <!-- SEMPERIS -->
-      <div class="card" data-cat="ispm" data-rel="direct" data-name="semperis" data-tags="active directory recovery ad itdr">
+      <div class="card" data-cat="ispm" data-rel="adjacent" data-name="semperis dsp directory services protector purple knight forest druid" data-tags="active directory entra recovery resilience ransomware itdr dsp">
         <div class="card-header" onclick="toggle(this)">
-          <span class="rel-dot rel-direct"></span><span class="comp-name">Semperis</span><span class="cat-tag">ISPM / ITDR</span><span class="chevron">&#9660;</span>
+          <span class="rel-dot rel-adjacent"></span><span class="comp-name">Semperis (DSP)</span><span class="cat-tag">AD Resilience / ITDR</span><span class="chevron">&#9660;</span>
         </div>
         <div class="card-body">
-          <span class="rel-label rel-label-direct">Direct competitor</span>
-          <div class="section"><div class="section-label">What they do</div><div class="section-text">Active Directory security and disaster recovery. ITDR-heavy — detects AD attacks and enables rapid forest recovery. Strong US brand in AD protection.</div></div>
+          <span class="rel-label rel-label-adjacent">Adjacent / complementary (recovery)</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Directory Services Protector (DSP) — AD/Entra resilience, recovery, and ransomware readiness, plus ITDR detection. Also makes the free Purple Knight &amp; Forest Druid tools. Strong US brand in AD protection.</div></div>
           <div class="divider"></div>
-          <div class="section"><div class="section-label">Strengths / Gaps</div><div class="pills"><span class="pill pill-s">Strong AD brand</span><span class="pill pill-s">Disaster recovery angle</span><span class="pill pill-g">Detection / recovery — not prevention</span><span class="pill pill-g">Not graph-native</span><span class="pill pill-g">Limited hybrid cloud coverage</span></div></div>
+          <div class="section"><div class="section-label">Strengths / Gaps</div><div class="pills"><span class="pill pill-s">Deep AD directory expertise</span><span class="pill pill-s">Recovery &amp; ransomware resilience</span><span class="pill pill-g">Recovery / detection — not pre-attack prevention</span><span class="pill pill-g">Not graph-native attack-path</span><span class="pill pill-g">Limited hybrid cloud coverage</span></div></div>
           <div class="divider"></div>
           <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"Semperis excels at protecting AD during an incident and recovering from one. Saporo works upstream — before the attack. We map every path across AD and cloud and show you the chokepoints that eliminate 80% of exposure before anyone tries to exploit them."</p><p>"If they have Semperis: position Saporo as the prevention layer. Complementary — different budget, different conversation."</p></div></div>
         </div>
