@@ -26,8 +26,8 @@
   --border:     #2A2F3B;
   --grad:       linear-gradient(120deg, #FF715B 0%, #8F2DF0 55%, #5132C0 100%);
 
-  /* layout — pages may override to match their content width */
-  --content-max: 880px;
+  /* layout — shared content width so every page lines up */
+  --content-max: 960px;
   --content-pad: 2rem;
 }
 
