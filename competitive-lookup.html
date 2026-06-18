@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saporo — Competitive Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Roboto+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    /* Saporo brand — dark theme (matches the enablement hub) */
+    --red:#FF715B; --red-dark:#FF8E7B; --red-light:rgba(255,113,91,0.12); --red-mid:rgba(255,113,91,0.18);
+    --bg:#12141D; --surface:#181B25; --border:#2A2F3B; --border-strong:#3A3F4D;
+    --text:#F5F6FA; --text-2:#9AA0B0; --text-3:#6E7385;
+    --green:#3CCF91; --green-bg:rgba(60,207,145,0.12); --green-b:rgba(60,207,145,0.32);
+    --orange:#FF934F; --orange-bg:rgba(255,147,79,0.12); --orange-b:rgba(255,147,79,0.32);
+    --blue:#6E8BFF; --blue-bg:rgba(60,92,207,0.18); --blue-b:rgba(110,139,255,0.4);
+    --gray-bg:#1E222C; --gray-b:#2A2F3B;
+    --grad:linear-gradient(120deg,#FF715B 0%,#8F2DF0 55%,#5132C0 100%);
+    --shadow-sm:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+    --shadow:0 4px 16px rgba(0,0,0,.5),0 1px 3px rgba(0,0,0,.4);
+  }
+  body { font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+  /* NAV */
+  nav { background:var(--surface); border-bottom:1px solid var(--border); padding:0 28px; display:flex; align-items:center; height:56px; position:sticky; top:0; z-index:100; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+  .nav-logo { display:flex; align-items:center; gap:10px; margin-right:36px; text-decoration:none; }
+  .nav-logo-icon { width:30px; height:30px; flex-shrink:0; }
+  .nav-logo-text { display:flex; flex-direction:column; line-height:1; }
+  .nav-logo-text .brand { font-size:15px; font-weight:800; color:var(--text); letter-spacing:-0.3px; }
+  .nav-logo-text .sub { font-size:8px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-3); margin-top:2px; }
+  .nav-links { display:flex; align-items:center; height:100%; flex:1; }
+  .nav-link { padding:0 16px; height:56px; display:flex; align-items:center; font-size:13.5px; font-weight:500; color:var(--text-2); cursor:pointer; border-bottom:2px solid transparent; transition:color .15s,border-color .15s; white-space:nowrap; }
+  .nav-link:hover { color:var(--text); }
+  .nav-link.active { color:var(--red); border-bottom-color:var(--red); font-weight:600; }
+  .nav-right { display:flex; align-items:center; gap:8px; margin-left:auto; }
+  .nav-badge { font-size:11px; font-weight:700; background:var(--red); color:#fff; padding:3px 9px; border-radius:20px; }
+  .nav-tag { font-size:11px; font-weight:600; letter-spacing:0.6px; text-transform:uppercase; color:var(--text-3); background:var(--gray-bg); border:1px solid var(--border); padding:3px 9px; border-radius:4px; }
+
+  /* PAGE */
+  .page { max-width:1020px; margin:0 auto; padding:28px 20px 60px; }
+  .score-bands { display:flex; height:5px; border-radius:3px; overflow:hidden; margin-bottom:20px; }
+  .band { flex:1; }
+  .page-header { margin-bottom:22px; }
+  .page-title { font-size:20px; font-weight:700; color:var(--text); letter-spacing:-0.3px; }
+  .page-subtitle { font-size:13px; color:var(--text-2); margin-top:4px; }
+
+  /* TAB BAR */
+  .tab-bar { display:flex; gap:0; margin-bottom:22px; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:4px; width:fit-content; box-shadow:var(--shadow-sm); }
+  .tab-btn { font-size:13px; font-weight:600; padding:7px 20px; border-radius:6px; border:none; background:transparent; color:var(--text-2); cursor:pointer; transition:all .15s; }
+  .tab-btn.active { background:var(--red); color:#fff; box-shadow:0 1px 4px rgba(255,113,91,.3); }
+  .tab-btn:not(.active):hover { color:var(--text); background:var(--gray-bg); }
+
+  /* SEARCH */
+  .search-wrap { position:relative; margin-bottom:14px; }
+  .search-wrap input { width:100%; background:var(--surface); border:1.5px solid var(--border); border-radius:8px; padding:10px 16px 10px 38px; font-size:14px; color:var(--text); outline:none; transition:border-color .15s,box-shadow .15s; box-shadow:var(--shadow-sm); }
+  .search-wrap input::placeholder { color:var(--text-3); }
+  .search-wrap input:focus { border-color:var(--red); box-shadow:0 0 0 3px rgba(255,113,91,.10); }
+  .search-icon { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-3); font-size:14px; pointer-events:none; }
+  .clear-btn { position:absolute; right:10px; top:50%; transform:translateY(-50%); background:var(--gray-bg); border:1px solid var(--border); color:var(--text-2); font-size:12px; cursor:pointer; padding:2px 8px; border-radius:4px; display:none; }
+  .clear-btn.visible { display:block; }
+
+  /* FILTERS */
+  .filters { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:20px; }
+  .filter-btn { font-size:12px; font-weight:600; padding:5px 14px; border-radius:20px; border:1.5px solid var(--border); background:var(--surface); color:var(--text-2); cursor:pointer; transition:all .15s; white-space:nowrap; box-shadow:var(--shadow-sm); }
+  .filter-btn:hover { border-color:var(--red); color:var(--red); }
+  .filter-btn.active { background:var(--red); border-color:var(--red); color:#fff; box-shadow:0 2px 6px rgba(255,113,91,.25); }
+
+  /* LEGEND */
+  .legend { display:flex; gap:18px; flex-wrap:wrap; margin-bottom:18px; padding:10px 14px; background:var(--surface); border:1px solid var(--border); border-radius:8px; box-shadow:var(--shadow-sm); }
+  .legend-item { display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--text-2); }
+  .legend-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+  /* TOOL GRID */
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+  /* CARDS */
+  .card { background:var(--surface); border:1.5px solid var(--border); border-radius:10px; overflow:hidden; cursor:pointer; transition:border-color .15s,box-shadow .15s; box-shadow:var(--shadow-sm); }
+  .card:hover { border-color:var(--border-strong); box-shadow:var(--shadow); }
+  .card.open { border-color:var(--red); border-left-width:3px; grid-column:span 2; box-shadow:0 3px 12px rgba(255,113,91,.12); }
+  .card-header { display:flex; align-items:center; gap:10px; padding:12px 14px; }
+  .rel-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .rel-direct { background:#FF715B; } .rel-adjacent { background:#FF934F; } .rel-stack { background:#6E8BFF; } .rel-neutral { background:#6E7385; }
+  .comp-name { font-size:13.5px; font-weight:700; color:var(--text); flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .card.open .comp-name { white-space:normal; }
+  .cat-tag { font-size:10px; font-weight:700; letter-spacing:0.4px; text-transform:uppercase; color:var(--text-3); padding:2px 7px; background:var(--gray-bg); border-radius:3px; border:1px solid var(--border); white-space:nowrap; flex-shrink:0; }
+  .chevron { color:var(--text-3); font-size:11px; transition:transform .2s; flex-shrink:0; }
+  .card.open .chevron { transform:rotate(180deg); color:var(--red); }
+  .card-body { display:none; padding:0 16px 16px; border-top:1px solid var(--border); }
+  .card.open .card-body { display:block; }
+  .section { margin-top:12px; }
+  .section-label { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--text-3); margin-bottom:5px; }
+  .section-text { font-size:13px; color:var(--text-2); line-height:1.6; }
+  .pills { display:flex; flex-wrap:wrap; gap:5px; }
+  .pill { font-size:11.5px; padding:3px 9px; border-radius:4px; font-weight:600; }
+  .pill-s { background:var(--green-bg); color:var(--green); border:1px solid var(--green-b); }
+  .pill-g { background:var(--red-light); color:var(--red-dark); border:1px solid rgba(255,113,91,0.45); }
+  .pill-n { background:var(--gray-bg); color:var(--text-2); border:1px solid var(--border); }
+  .rel-label { display:inline-block; font-size:10px; font-weight:700; letter-spacing:0.6px; text-transform:uppercase; padding:2px 8px; border-radius:3px; margin-top:12px; margin-bottom:2px; }
+  .rel-label-direct { background:var(--red-light); color:var(--red); border:1px solid rgba(255,113,91,0.45); }
+  .rel-label-adjacent { background:var(--orange-bg); color:var(--orange); border:1px solid var(--orange-b); }
+  .rel-label-stack { background:var(--blue-bg); color:var(--blue); border:1px solid var(--blue-b); }
+  .rel-label-neutral { background:var(--gray-bg); color:var(--text-2); border:1px solid var(--border); }
+  .response-box { background:var(--red-light); border:1px solid rgba(255,113,91,0.45); border-left:3px solid var(--red); border-radius:0 6px 6px 0; padding:11px 14px; margin-top:6px; }
+  .response-box p { font-size:13px; color:#F3BDB2; line-height:1.65; font-style:italic; }
+  .response-box p+p { margin-top:7px; }
+  .stack-box { background:var(--blue-bg); border:1px solid var(--blue-b); border-left:3px solid var(--blue); border-radius:0 6px 6px 0; padding:11px 14px; margin-top:6px; font-size:13px; color:#C7D2FF; line-height:1.65; font-style:italic; }
+  .divider { width:100%; height:1px; background:var(--border); margin:12px 0 0; }
+  .no-results { text-align:center; padding:48px; color:var(--text-3); font-size:14px; display:none; grid-column:span 2; }
+
+  /* QUICK REF */
+  .ref-panel { margin-top:22px; background:var(--surface); border:1.5px solid var(--border); border-radius:10px; overflow:hidden; box-shadow:var(--shadow-sm); }
+  .ref-header { padding:14px 18px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; border-bottom:1px solid transparent; transition:border-color .15s; }
+  .ref-panel.open .ref-header { border-bottom-color:var(--border); }
+  .ref-title { font-size:13px; font-weight:700; color:var(--text-2); display:flex; align-items:center; gap:8px; }
+  .ref-icon { width:20px; height:20px; background:var(--red); border-radius:4px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:11px; font-weight:700; flex-shrink:0; }
+  .ref-body { display:none; padding:16px 18px; }
+  .ref-panel.open .ref-body { display:block; }
+  .diff-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:4px; }
+  .diff-item { background:var(--gray-bg); border:1px solid var(--border); border-radius:8px; padding:11px 12px; }
+  .diff-num { font-size:10px; font-weight:800; color:var(--red); margin-bottom:4px; letter-spacing:0.5px; }
+  .diff-text { font-size:12.5px; color:var(--text-2); line-height:1.5; }
+  .liners-grid { margin-top:14px; display:flex; flex-direction:column; gap:8px; }
+  .liner-item { padding:11px 13px; background:var(--gray-bg); border:1px solid var(--border); border-radius:8px; }
+  .liner-ctx { font-size:10px; font-weight:800; letter-spacing:0.8px; text-transform:uppercase; color:var(--red); margin-bottom:5px; }
+  .liner-quote { font-size:13px; color:var(--text); line-height:1.65; font-style:italic; }
+  .ref-section-label { font-size:10px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--text-3); margin-bottom:8px; margin-top:14px; }
+  .ref-section-label:first-child { margin-top:0; }
+
+  /* GLOSSARY */
+  .gloss-search-wrap { position:relative; margin-bottom:16px; }
+  .gloss-search-wrap input { width:100%; background:var(--surface); border:1.5px solid var(--border); border-radius:8px; padding:10px 16px 10px 38px; font-size:14px; color:var(--text); outline:none; transition:border-color .15s,box-shadow .15s; box-shadow:var(--shadow-sm); }
+  .gloss-search-wrap input::placeholder { color:var(--text-3); }
+  .gloss-search-wrap input:focus { border-color:var(--red); box-shadow:0 0 0 3px rgba(255,113,91,.10); }
+  .gloss-search-icon { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-3); font-size:14px; pointer-events:none; }
+
+  .gloss-cat-filters { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:20px; }
+
+  .gloss-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:8px; }
+  .gloss-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 14px; box-shadow:var(--shadow-sm); transition:border-color .15s; }
+  .gloss-card:hover { border-color:var(--border-strong); }
+  .gloss-acronym { font-size:14px; font-weight:800; color:var(--text); letter-spacing:-0.2px; }
+  .gloss-def { font-size:12.5px; color:var(--text-2); margin-top:3px; line-height:1.5; }
+  .gloss-full { font-size:11.5px; color:var(--text-3); margin-top:2px; font-style:italic; }
+  .gloss-cat-badge { display:inline-block; font-size:9.5px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; padding:2px 6px; border-radius:3px; margin-top:5px; }
+  .gcat-identity  { background:rgba(255,113,91,0.14); color:#FF9685; border:1px solid rgba(255,113,91,0.35); }
+  .gcat-protocol  { background:rgba(60,92,207,0.20); color:#9DB0FF; border:1px solid rgba(110,139,255,0.40); }
+  .gcat-threat    { background:rgba(255,147,79,0.14); color:#FFB07A; border:1px solid rgba(255,147,79,0.35); }
+  .gcat-cloud     { background:rgba(60,207,145,0.14); color:#5FE0AC; border:1px solid rgba(60,207,145,0.35); }
+  .gcat-framework { background:rgba(143,45,240,0.20); color:#C79BF5; border:1px solid rgba(143,45,240,0.40); }
+  .gcat-business  { background:rgba(45,160,210,0.16); color:#7FC6E8; border:1px solid rgba(45,160,210,0.40); }
+  .gcat-technical { background:rgba(154,160,176,0.12); color:#B7BCC9; border:1px solid #3A3F4D; }
+  .gloss-no-results { text-align:center; padding:48px; color:var(--text-3); font-size:14px; display:none; grid-column:1/-1; }
+
+  @media (max-width:680px) {
+    .grid { grid-template-columns:1fr; }
+    .card.open { grid-column:span 1; }
+    .no-results { grid-column:span 1; }
+    .diff-grid { grid-template-columns:1fr; }
+    .gloss-grid { grid-template-columns:1fr; }
+  }
+  /* Saporo brand: mono treatment for labels (matches enablement hub) */
+  .nav-logo-text .sub, .nav-tag, .nav-badge, .section-label, .cat-tag, .rel-label,
+  .gloss-cat-badge, .liner-ctx, .diff-num, .ref-section-label { font-family:'Roboto Mono',monospace; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html" title="Back to Enablement Hub">
+    <svg class="nav-logo-icon" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M5 27 L13 19 L21 19 L29 11" stroke="#FF715B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+      <path d="M5 11 L13 19 M21 19 L21 27" stroke="#F5F6FA" stroke-width="1.4" stroke-linecap="round" opacity="0.35"/>
+      <circle cx="5"  cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
+      <circle cx="13" cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
+      <circle cx="21" cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
+      <circle cx="29" cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
+      <circle cx="5"  cy="11" r="2"   fill="#F5F6FA"/>
+      <circle cx="29" cy="11" r="2.4" fill="#5132C0"/>
+      <circle cx="13" cy="19" r="2.4" fill="#FF715B"/>
+      <circle cx="21" cy="19" r="2.4" fill="#FF715B"/>
+      <circle cx="5"  cy="27" r="2.4" fill="#FF715B"/>
+      <circle cx="21" cy="27" r="2"   fill="#F5F6FA"/>
+      <circle cx="29" cy="27" r="1.7" fill="#F5F6FA" opacity="0.45"/>
+      <circle cx="13" cy="27" r="1.7" fill="#F5F6FA" opacity="0.45"/>
+    </svg>
+    <div class="nav-logo-text">
+      <span class="brand">SAPORO</span>
+      <span class="sub">Order in Chaos</span>
+    </div>
+  </a>
+  <div class="nav-links">
+    <div class="nav-link">Home</div>
+    <div class="nav-link">Findings</div>
+    <div class="nav-link">Explore</div>
+    <div class="nav-link">Analytics</div>
+    <div class="nav-link active">Competitive</div>
+  </div>
+  <div class="nav-right">
+    <span class="nav-badge" id="countBadge">40 tools</span>
+    <span class="nav-tag">Live Call Ref</span>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="score-bands">
+    <div class="band" style="background:#3CCF91"></div>
+    <div class="band" style="background:#3C5CCF"></div>
+    <div class="band" style="background:#5132C0"></div>
+    <div class="band" style="background:#8F2DF0"></div>
+    <div class="band" style="background:#FF934F"></div>
+    <div class="band" style="background:#FF715B"></div>
+  </div>
+
+  <div class="page-header">
+    <div class="page-title">Security Landscape Reference</div>
+    <div class="page-subtitle">Tools, competitive positioning, and acronym glossary — for use on live calls.</div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="showTab('tools',this)">Tools (40)</button>
+    <button class="tab-btn" onclick="showTab('glossary',this)">Acronym Glossary</button>
+  </div>
+
+  <!-- ===== TOOLS TAB ===== -->
+  <div id="tab-tools">
+    <div class="search-wrap">
+      <span class="search-icon">&#9906;</span>
+      <input type="text" id="search" placeholder="Search by name, category, or keyword..." autocomplete="off" autofocus />
+      <button class="clear-btn" id="clearBtn" onclick="clearSearch()">&#x2715; Clear</button>
+    </div>
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="ispm">ISPM / ITDR</button>
+      <button class="filter-btn" data-filter="iam">IAM / IGA</button>
+      <button class="filter-btn" data-filter="pam">PAM</button>
+      <button class="filter-btn" data-filter="ad">AD Security</button>
+      <button class="filter-btn" data-filter="edr">EDR / XDR</button>
+      <button class="filter-btn" data-filter="siem">SIEM / SOAR</button>
+      <button class="filter-btn" data-filter="cloud">Cloud Security</button>
+      <button class="filter-btn" data-filter="vuln">Vuln / Exposure</button>
+      <button class="filter-btn" data-filter="grc">GRC / Compliance</button>
+      <button class="filter-btn" data-filter="network">Network / ZT</button>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#FF715B"></div>Direct competitor</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#FF934F"></div>Adjacent / sometimes compared</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#6E8BFF"></div>Complementary / stack</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#6E7385"></div>Context / already in account</div>
+    </div>
+
+    <div class="grid" id="grid">
+
+      <!-- ARCHER -->
+      <div class="card" data-cat="grc" data-rel="stack" data-name="archer rsa grc" data-tags="governance risk compliance policy audit">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">Archer (RSA GRC)</span><span class="cat-tag">GRC</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / context</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Enterprise GRC — policy management, risk assessments, audit management, compliance reporting. Common in financial services and regulated industries.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Archer manages the risk register and compliance program. Saporo is a source of technical evidence for that program — findings map to CIS Controls, ISO 27001, and MITRE ATT&CK."</div></div>
+        </div>
+      </div>
+
+      <!-- AUTHMIND -->
+      <div class="card" data-cat="ispm" data-rel="direct" data-name="authmind" data-tags="identity security posture management itdr agentless us-based">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-direct"></span><span class="comp-name">AuthMind</span><span class="cat-tag">ISPM / ITDR</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-direct">Direct competitor</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">ISPM + ITDR platform, agentless, multi-environment. US-based (Bethesda, MD). Closest category match — will appear on the same shortlists.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">Strengths / Gaps</div><div class="pills"><span class="pill pill-s">Same category positioning</span><span class="pill pill-s">US-based</span><span class="pill pill-s">Agentless</span><span class="pill pill-g">Not graph-native at Saporo's scale</span><span class="pill pill-g">Lacks chokepoint model</span></div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"AuthMind is in the same category — the question is depth and scale. Saporo's in-memory graph engine processes billions of attack paths in real time. In complex hybrid environments, the coverage difference becomes visible quickly — lean into a POC."</p></div></div>
+        </div>
+      </div>
+
+      <!-- BEYONDTRUST -->
+      <div class="card" data-cat="pam" data-rel="stack" data-name="beyondtrust" data-tags="privileged access remote access endpoint privilege pam">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">BeyondTrust</span><span class="cat-tag">PAM</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / stack</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">PAM platform — privileged password management, endpoint privilege management, secure remote access. Known for endpoint least privilege angle.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"BeyondTrust enforces least privilege and controls privileged sessions. Saporo maps the attack paths that lead to those accounts. Saporo finds the risk, BeyondTrust contains it."</div></div>
+        </div>
+      </div>
+
+      <!-- BLOODHOUND -->
+      <div class="card" data-cat="ispm" data-rel="direct" data-name="bloodhound enterprise specterops" data-tags="attack path graph azure ad red team">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-direct"></span><span class="comp-name">BloodHound Enterprise (SpecterOps)</span><span class="cat-tag">ISPM / ITDR</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-direct">Direct competitor</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Graph-based attack path analysis for AD and Azure AD. Well-known in offensive security / red team circles via the open-source BloodHound tool.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">Strengths / Gaps</div><div class="pills"><span class="pill pill-s">Security research credibility</span><span class="pill pill-s">Graph-based approach</span><span class="pill pill-g">More analyst-driven, less operationalized</span><span class="pill pill-g">Narrower coverage (AD/Azure only)</span><span class="pill pill-g">No enterprise-scale remediation workflows</span></div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"BloodHound is great for analysts who want to see attack paths. Saporo is built for the team that needs to fix them at scale — with prioritization that tells you the 5 changes that eliminate 80% of risk. BloodHound shows you the map; Saporo hands you the navigation."</p><p>"Open-source BH users are a good ICP signal — they already get attack paths. Sell them enterprise operationalization."</p></div></div>
+        </div>
+      </div>
+
+      <!-- CISCO IDENTITY INTELLIGENCE -->
+      <div class="card" data-cat="ispm" data-rel="direct" data-name="cisco identity intelligence authomize" data-tags="ispm saas cloud cisco">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-direct"></span><span class="comp-name">Cisco Identity Intelligence (fka Authomize)</span><span class="cat-tag">ISPM / ITDR</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-direct">Direct competitor</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">ISPM platform acquired by Cisco (2023). Part of the Cisco Security Cloud. Focus on SaaS and cloud identity posture, entitlement visibility, and risk detection. Surfaces in accounts with Cisco relationships.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">Strengths / Gaps</div><div class="pills"><span class="pill pill-s">Cisco distribution network</span><span class="pill pill-s">Strong SaaS / cloud identity coverage</span><span class="pill pill-g">Weaker on-prem AD depth</span><span class="pill pill-g">Platform bundle, not attack path specialist</span><span class="pill pill-g">Integration complexity post-acquisition</span></div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"Cisco Identity Intelligence is strong on SaaS and cloud entitlement visibility. Saporo's differentiator is graph-native attack path computation across hybrid environments. If they have complex AD, the comparison will favor Saporo on depth."</p></div></div>
+        </div>
+      </div>
+
+      <!-- CROWDSTRIKE -->
+      <div class="card" data-cat="edr" data-rel="stack" data-name="crowdstrike falcon identity" data-tags="edr endpoint detection response xdr identity threat">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">CrowdStrike Falcon</span><span class="cat-tag">EDR / XDR</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / already in account</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Market-leading EDR/XDR with identity threat protection module (Falcon Identity). Deployed in most enterprise accounts. Identity module detects identity-based attacks in motion.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"CrowdStrike is excellent — complementary, not competitive. Falcon catches threats in motion. Saporo eliminates the misconfigurations that make those threats possible. Falcon is the alarm system; Saporo is removing the unlocked windows."</p></div></div>
+        </div>
+      </div>
+
+      <!-- CYBERARK -->
+      <div class="card" data-cat="pam" data-rel="stack" data-name="cyberark pam" data-tags="privileged access management secrets vault pam">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">CyberArk</span><span class="cat-tag">PAM</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / stack</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Market-leading PAM — vaulting, session management, secrets management, just-in-time access. Also has a Workforce Identity platform. Common in regulated enterprises.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"CyberArk vaults privileged accounts. Saporo shows the attack paths that lead to those accounts — so you can prioritize what needs to be vaulted first. Strong co-sell story: Saporo finds the risk, CyberArk contains it."</div></div>
+        </div>
+      </div>
+
+      <!-- DELINEA -->
+      <div class="card" data-cat="pam" data-rel="stack" data-name="delinea thycotic centrify" data-tags="privileged access management pam cloud">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">Delinea (fka Thycotic / Centrify)</span><span class="cat-tag">PAM</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / stack</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">PAM platform formed from Thycotic + Centrify merger. Cloud-native positioning, mid-market to enterprise. Secret Server and Privilege Manager are flagship products.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Same co-sell story as CyberArk — PAM controls privileged access, Saporo maps the risk that drives PAM prioritization."</div></div>
+        </div>
+      </div>
+
+      <!-- EXABEAM -->
+      <div class="card" data-cat="siem" data-rel="stack" data-name="exabeam logrhythm ueba" data-tags="ueba behavior analytics insider threat siem">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">Exabeam / LogRhythm</span><span class="cat-tag">SIEM / UEBA</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / stack</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">SIEM and UEBA platform — behavioral analytics and threat detection via behavioral baselines. Merged with LogRhythm (2024). Strong in mid-enterprise and regulated sectors.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Exabeam detects anomalous behavior in real time. Saporo shows the misconfigured pathways that make that behavior dangerous. Different signal types — they coexist well."</div></div>
+        </div>
+      </div>
+
+      <!-- FORTINET -->
+      <div class="card" data-cat="network" data-rel="stack" data-name="fortinet fortigate" data-tags="firewall network security fortios ngfw">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">Fortinet</span><span class="cat-tag">Network Security</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / stack</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Network security vendor — NGFWs, SD-WAN, SASE. Common in mid-market and enterprise. Identity security is not a strength of the FortiGuard portfolio.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Fortinet is network-centric. Identity attack path management is not part of their portfolio. Fortinet accounts often have an underserved identity risk problem — strong Saporo entry point."</div></div>
+        </div>
+      </div>
+
+      <!-- IBM QRADAR -->
+      <div class="card" data-cat="siem" data-rel="stack" data-name="ibm qradar siem" data-tags="siem security operations center log management ibm">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">IBM QRadar</span><span class="cat-tag">SIEM</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / stack</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Enterprise SIEM with UEBA and SOAR. Common in large financial services and government accounts.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"QRadar is the detection and logging layer. Saporo adds identity posture and attack path context QRadar can't generate. QRadar accounts are SOC-mature — a good audience for Saporo's proactive approach."</div></div>
+        </div>
+      </div>
+
+      <!-- IBM VERIFY -->
+      <div class="card" data-cat="ispm" data-rel="adjacent" data-name="ibm verify identity protection" data-tags="enterprise itdr ispm ibm">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-adjacent"></span><span class="comp-name">IBM Verify Identity Protection</span><span class="cat-tag">ISPM / ITDR</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-adjacent">Adjacent / sometimes compared</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Enterprise ISPM/ITDR integrated with IBM Security stack (QRadar, Verify). Relevant in large regulated accounts where IBM is deeply embedded.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">Strengths / Gaps</div><div class="pills"><span class="pill pill-s">IBM relationship leverage</span><span class="pill pill-s">Integrates with existing IBM stack</span><span class="pill pill-g">Slower innovation cycle</span><span class="pill pill-g">Not graph-native attack path specialist</span></div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"IBM is a platform sale. If identity attack path coverage is the priority, ask how IBM quantifies the number of paths computed across their AD and cloud environment. That's where the technical comparison turns."</p></div></div>
+        </div>
+      </div>
+
+      <!-- MICROSOFT DEFENDER FOR IDENTITY -->
+      <div class="card" data-cat="edr" data-rel="stack" data-name="microsoft defender for identity mdi atp" data-tags="azure defender identity lateral movement atp microsoft">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">Microsoft Defender for Identity</span><span class="cat-tag">Identity Detection</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / already in account</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Microsoft's identity threat detection — monitors AD for suspicious behavior, lateral movement, credential attacks, DCSync. Formerly Azure ATP. Part of the Microsoft 365 Defender suite.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"MDI is a good detection tool — it alerts when attacks are happening. Saporo works upstream: it maps attack paths before anyone tries to use them, and tells you which misconfigurations to fix first. Detection and prevention — both necessary, different tools."</p></div></div>
+        </div>
+      </div>
+
+      <!-- MICROSOFT ENTRA -->
+      <div class="card" data-cat="iam" data-rel="stack" data-name="microsoft entra id azure ad" data-tags="azure active directory cloud identity conditional access mfa microsoft">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">Microsoft Entra ID</span><span class="cat-tag">IAM</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">"Why not just use what we have?"</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Microsoft's cloud identity platform — SSO, MFA, Conditional Access, identity governance. Present in virtually every account. Most common adjacent objection.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">Their gaps vs. Saporo</div><div class="pills"><span class="pill pill-g">No attack path computation or visualization</span><span class="pill pill-g">No chokepoint prioritization</span><span class="pill pill-g">Blind to on-prem AD cross-environment paths</span><span class="pill pill-g">Secure Score = checkbox, not risk priority</span></div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"Entra tells you your current configuration — it doesn't show you how an attacker chains those configurations together to reach a Domain Controller. Saporo maps those paths and tells you which five changes collapse 80% of the risk."</p><p>Discovery question: "How does your Microsoft tooling tell you which misconfigurations could be chained to reach your most critical assets?"</p></div></div>
+        </div>
+      </div>
+
+      <!-- MICROSOFT SENTINEL -->
+      <div class="card" data-cat="siem" data-rel="stack" data-name="microsoft sentinel azure sentinel" data-tags="siem cloud native security operations azure microsoft">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">Microsoft Sentinel</span><span class="cat-tag">SIEM</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / stack</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Cloud-native SIEM built on Azure. Tight integration with Microsoft 365 and Defender suite. Common in Microsoft-heavy enterprises as the default SOC platform.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Sentinel is a strong SIEM in a Microsoft stack. It detects threats from logs. Saporo operates upstream — mapping identity attack paths and eliminating them proactively. Different tool, different timing."</div></div>
+        </div>
+      </div>
+
+      <!-- NETWRIX -->
+      <div class="card" data-cat="ad" data-rel="neutral" data-name="netwrix" data-tags="active directory auditing change detection compliance">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-neutral"></span><span class="comp-name">Netwrix</span><span class="cat-tag">AD Auditing</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-neutral">Context / already in account</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">AD auditing, change detection, data access governance, compliance reporting. Primarily answers "who changed what in AD" and generates audit evidence.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Netwrix tells you what changed after the fact. Saporo tells you what those configurations enable from an attacker's perspective — proactively. Completely different use case."</div></div>
+        </div>
+      </div>
+
+      <!-- OKTA -->
+      <div class="card" data-cat="iam" data-rel="stack" data-name="okta" data-tags="iam sso mfa workforce identity access management">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">Okta</span><span class="cat-tag">IAM</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / stack</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Workforce and customer identity — SSO, MFA, lifecycle management, adaptive access. Saporo ingests Okta as a data source for attack path analysis.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Saporo connects to Okta as a data source — it reads your Okta identity data and incorporates it into the attack path graph alongside AD and Azure. Having Okta doesn't answer what an attacker could do with those identities in a hybrid path. That's what Saporo shows."</div></div>
+        </div>
+      </div>
+
+      <!-- ORCA -->
+      <div class="card" data-cat="cloud" data-rel="stack" data-name="orca security" data-tags="cloud security agentless workload cspm">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">Orca Security</span><span class="cat-tag">CSPM / CNAPP</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / stack</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Agentless cloud security — CSPM, workload protection, vulnerability management, cloud attack path analysis. Competes with Wiz; similar positioning.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Orca covers cloud infrastructure risk. Saporo covers identity attack paths. Same complementary story as Wiz — different environments."</div></div>
+        </div>
+      </div>
+
+      <!-- PALO ALTO CORTEX -->
+      <div class="card" data-cat="edr" data-rel="stack" data-name="palo alto cortex xdr" data-tags="xdr endpoint cloud detection response palo alto">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">Palo Alto Cortex XDR</span><span class="cat-tag">XDR</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / already in account</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Extended detection and response from Palo Alto Networks. Combines endpoint, network, and cloud telemetry. Identity data feeds into XDR alerts but it is not a dedicated ISPM tool.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Cortex XDR correlates signals after an event. Saporo eliminates the attack paths before they become events. Palo Alto accounts are high-quality targets — security-mature and receptive to prevention-first positioning."</div></div>
+        </div>
+      </div>
+
+      <!-- PALO ALTO NGFW -->
+      <div class="card" data-cat="network" data-rel="stack" data-name="palo alto networks ngfw sase" data-tags="firewall network security next generation ngfw palo alto">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">Palo Alto Networks (NGFW / SASE)</span><span class="cat-tag">Network Security</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / stack</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Market-leading NGFW and SASE platform. Identity-aware network security but not an identity attack path tool. PAN accounts are typically security-mature.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Palo Alto controls the network perimeter. Saporo controls the identity attack surface — the paths attackers follow after they're inside. PAN accounts are great targets — security-mature and receptive to prevention-first positioning."</div></div>
+        </div>
+      </div>
+
+      <!-- PALO ALTO PRISMA -->
+      <div class="card" data-cat="cloud" data-rel="stack" data-name="palo alto prisma cloud ciem" data-tags="cspm cnapp cloud workload ciem entitlements palo alto">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">Palo Alto Prisma Cloud</span><span class="cat-tag">CSPM / CNAPP</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / stack</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Cloud security platform covering CSPM, container security, code security, and cloud identity entitlements (CIEM module). Part of the Palo Alto Networks portfolio.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Prisma Cloud's CIEM covers cloud entitlement permissions. Saporo covers hybrid identity attack paths — how on-prem AD connects to those cloud entitlements. Different scope, both part of a complete identity security program."</div></div>
+        </div>
+      </div>
+
+      <!-- PING IDENTITY -->
+      <div class="card" data-cat="iam" data-rel="stack" data-name="ping identity forgerock" data-tags="iam federation sso enterprise identity">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">Ping Identity / ForgeRock</span><span class="cat-tag">IAM</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / stack</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Enterprise IAM platform — SSO, federation, MFA, CIAM. ForgeRock merged with Ping Identity (2023). Common in large financial services and telco accounts with complex federation requirements.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Ping/ForgeRock is authentication infrastructure. Saporo sits on top — it reads identity data and maps attack paths regardless of the underlying IAM platform. Complementary by design."</div></div>
+        </div>
+      </div>
+
+      <!-- QUALYS -->
+      <div class="card" data-cat="vuln" data-rel="stack" data-name="qualys vmdr" data-tags="vulnerability management cloud patch scanning">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">Qualys VMDR</span><span class="cat-tag">Vulnerability Mgmt</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / stack</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Cloud-based vulnerability management, detection and response. Covers infrastructure, endpoints, cloud workloads, and containers. No dedicated identity attack path capability.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Qualys covers vulnerability exposure in the infrastructure layer. Saporo covers identity attack path exposure. Different attack surfaces — both matter."</div></div>
+        </div>
+      </div>
+
+      <!-- QUEST -->
+      <div class="card" data-cat="ad" data-rel="neutral" data-name="quest active roles" data-tags="active directory management provisioning">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-neutral"></span><span class="comp-name">Quest (Active Roles)</span><span class="cat-tag">AD Management</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-neutral">Context / already in account</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">AD management tooling — Active Roles for AD delegation and provisioning, AD auditing and recovery. More IT operations than security.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Quest Active Roles manages your AD structure. Saporo analyzes whether that structure creates attack paths. Completely different use cases — acknowledge and move on."</div></div>
+        </div>
+      </div>
+
+      <!-- RAPID7 -->
+      <div class="card" data-cat="vuln" data-rel="stack" data-name="rapid7 insightvm nexpose insightdr" data-tags="vulnerability management detection response exposure">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">Rapid7 InsightVM</span><span class="cat-tag">Vulnerability Mgmt</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / stack</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Vulnerability and exposure management (InsightVM) plus SIEM (InsightIDR) and MDR services. InsightIDR has some identity threat detection capability — UEBA and AD monitoring.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Rapid7's identity monitoring in InsightIDR is behavioral detection. Saporo maps attack paths structurally — it doesn't wait for behavior. The VM product is a different category entirely."</div></div>
+        </div>
+      </div>
+
+      <!-- SAILPOINT -->
+      <div class="card" data-cat="iam" data-rel="stack" data-name="sailpoint iga" data-tags="identity governance administration access certification provisioning">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">SailPoint</span><span class="cat-tag">IGA</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / stack</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Identity Governance and Administration — access certifications, provisioning, role management, compliance reporting. Large enterprise and regulated market.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"SailPoint governs provisioning and access review. Saporo shows what that access enables in attack paths. SailPoint: 'does this person have the right access?' Saporo: 'what could an attacker do if they compromised this account?' Different questions — both part of a mature identity program."</div></div>
+        </div>
+      </div>
+
+      <!-- SAVIYNT -->
+      <div class="card" data-cat="iam" data-rel="stack" data-name="saviynt cloud iga cpam" data-tags="identity governance cloud access privileged">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">Saviynt</span><span class="cat-tag">IGA</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / stack</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Cloud-native IGA + CPAM. Competes with SailPoint; positioned as the cloud-first IGA alternative. Strong in financial services and healthcare.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Same complementary dynamic as SailPoint. If they have Saviynt, it validates the need for Saporo: they've invested in governance but still need to know what the residual attack paths look like."</div></div>
+        </div>
+      </div>
+
+      <!-- SEMPERIS -->
+      <div class="card" data-cat="ispm" data-rel="direct" data-name="semperis" data-tags="active directory recovery ad itdr">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-direct"></span><span class="comp-name">Semperis</span><span class="cat-tag">ISPM / ITDR</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-direct">Direct competitor</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Active Directory security and disaster recovery. ITDR-heavy — detects AD attacks and enables rapid forest recovery. Strong US brand in AD protection.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">Strengths / Gaps</div><div class="pills"><span class="pill pill-s">Strong AD brand</span><span class="pill pill-s">Disaster recovery angle</span><span class="pill pill-g">Detection / recovery — not prevention</span><span class="pill pill-g">Not graph-native</span><span class="pill pill-g">Limited hybrid cloud coverage</span></div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"Semperis excels at protecting AD during an incident and recovering from one. Saporo works upstream — before the attack. We map every path across AD and cloud and show you the chokepoints that eliminate 80% of exposure before anyone tries to exploit them."</p><p>"If they have Semperis: position Saporo as the prevention layer. Complementary — different budget, different conversation."</p></div></div>
+        </div>
+      </div>
+
+      <!-- SENTINELONE -->
+      <div class="card" data-cat="edr" data-rel="stack" data-name="sentinelone singularity identity attivo" data-tags="edr endpoint xdr identity detection">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">SentinelOne Singularity</span><span class="cat-tag">EDR / XDR</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / already in account</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">EDR/XDR with identity module (acquired Attivo Networks for ITDR, 2022). Singularity Identity detects lateral movement and credential attacks.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"Same story as CrowdStrike — detection in motion vs. Saporo's attack path prevention. The Attivo acquisition added identity deception/detection — still a different layer."</p></div></div>
+        </div>
+      </div>
+
+      <!-- SERVICENOW -->
+      <div class="card" data-cat="grc" data-rel="stack" data-name="servicenow secops grc itsm" data-tags="grc governance risk compliance itsm ticketing workflow">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">ServiceNow SecOps / GRC</span><span class="cat-tag">GRC / ITSM</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / workflow integration</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">ITSM platform with SecOps (vulnerability response, incident response) and GRC (risk, policy, compliance) modules. Very common in enterprise accounts for security workflow automation and ticketing.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"If they use ServiceNow for remediation ticketing, Saporo findings can feed directly into those workflows. Saporo identifies and prioritizes — ServiceNow operationalizes the fix."</div></div>
+        </div>
+      </div>
+
+      <!-- SILVERFORT -->
+      <div class="card" data-cat="ad" data-rel="adjacent" data-name="silverfort" data-tags="identity protection mfa adaptive authentication lateral movement ad">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-adjacent"></span><span class="comp-name">Silverfort</span><span class="cat-tag">Identity Protection</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-adjacent">Adjacent / sometimes compared</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Unified identity protection — MFA enforcement for legacy systems, adaptive authentication, lateral movement detection. Strong US brand. Enforcement-layer play, not posture/attack path.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">Strengths / Gaps</div><div class="pills"><span class="pill pill-s">Strong US market presence</span><span class="pill pill-s">Real-time enforcement, legacy MFA</span><span class="pill pill-g">Enforcement layer — not attack path posture</span><span class="pill pill-g">Different buyer (IAM vs. security posture)</span></div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"Silverfort is an enforcement play — it controls authentication. Saporo is a posture play — it eliminates the misconfigurations that make accounts exploitable. If both are in play: Silverfort enforces; Saporo ensures there's nothing dangerous left to enforce against."</p></div></div>
+        </div>
+      </div>
+
+      <!-- SPLUNK -->
+      <div class="card" data-cat="siem" data-rel="stack" data-name="splunk siem soar" data-tags="security information event management logging detection soc">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">Splunk</span><span class="cat-tag">SIEM / SOAR</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / stack</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Market-leading SIEM and SOAR platform. Acquired by Cisco (2024). Ingests logs, detects threats, orchestrates response. Common in enterprise SOCs.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Splunk tells you what happened. Saporo tells you what could happen — and prevents it. Saporo findings can pipe into Splunk so the SOC has identity risk context alongside other alerts."</div></div>
+        </div>
+      </div>
+
+      <!-- TENABLE IDENTITY EXPOSURE -->
+      <div class="card" data-cat="ispm" data-rel="direct" data-name="tenable identity exposure alsid tenable.ad" data-tags="active directory exposure tenable">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-direct"></span><span class="comp-name">Tenable Identity Exposure</span><span class="cat-tag">ISPM / ITDR</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-direct">Direct competitor</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Formerly Alsid, acquired by Tenable. AD and Entra posture and attack path analysis, integrated into Tenable One. Risk: buyers may add it as a bundle rather than evaluate best-of-breed.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">Strengths / Gaps</div><div class="pills"><span class="pill pill-s">Tenable relationship / bundle leverage</span><span class="pill pill-s">AD + Entra coverage</span><span class="pill pill-g">Platform module, not a standalone specialist</span><span class="pill pill-g">Limited graph-native scale</span><span class="pill pill-g">Less operationalized remediation</span></div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"If they're evaluating Tenable Identity Exposure as part of an existing Tenable agreement, the conversation is best-of-breed vs. bundle. Ask them how many attack paths their current tool has computed in their environment — that's where the comparison turns."</p></div></div>
+        </div>
+      </div>
+
+      <!-- TENABLE ONE / NESSUS -->
+      <div class="card" data-cat="vuln" data-rel="stack" data-name="tenable io nessus tenable one" data-tags="vulnerability management scanning exposure nessus">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">Tenable (Nessus / Tenable One)</span><span class="cat-tag">Vulnerability Mgmt</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / stack</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Vulnerability scanning and exposure management. Tenable One is their unified exposure platform (VM, cloud, OT, identity). Extremely common — nearly universal in enterprise environments.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Tenable is almost certainly already in the environment. VM focuses on CVEs and patch exposure. Saporo focuses on identity misconfigurations and attack paths — the exploitation layer after a credential is stolen. Completely complementary."</div></div>
+        </div>
+      </div>
+
+      <!-- WIZ -->
+      <div class="card" data-cat="cloud" data-rel="stack" data-name="wiz cspm cnapp" data-tags="cloud security posture management cspm cnapp cloud risk workload">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">Wiz</span><span class="cat-tag">CSPM / CNAPP</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / stack</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Cloud security platform (CSPM + CNAPP). Graph-based cloud risk analysis — identifies misconfigs, toxic combinations, and exposure. Strong market presence. Covers cloud workloads and some cloud IAM — not on-prem AD attack paths.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Wiz is excellent at cloud workload risk. Saporo's depth is in identity attack paths across hybrid AD + cloud — the paths from on-prem into cloud that Wiz doesn't model. Different terrain, both in a mature stack."</div></div>
+        </div>
+      </div>
+
+      <!-- XM CYBER -->
+      <div class="card" data-cat="ispm" data-rel="adjacent" data-name="xm cyber schwarz" data-tags="attack path simulation exposure management">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-adjacent"></span><span class="comp-name">XM Cyber</span><span class="cat-tag">Exposure Management</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-adjacent">Adjacent / sometimes compared</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Attack path simulation and exposure management across identity, vulnerabilities, and cloud misconfigs. Acquired by Schwarz Group ($700M). Strong US enterprise presence. Broad scope — identity is one module.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">Strengths / Gaps</div><div class="pills"><span class="pill pill-s">Well-funded, enterprise credibility</span><span class="pill pill-s">Broad attack surface coverage</span><span class="pill pill-g">Identity is a module, not the core</span><span class="pill pill-g">Less AD/Entra attack path depth</span></div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"XM Cyber is an exposure management platform that includes identity. Saporo is purpose-built for identity attack paths — deeper on AD, Entra, Okta, and AWS. If identity is their biggest risk surface, best-of-breed wins."</p></div></div>
+        </div>
+      </div>
+
+      <!-- ZSCALER -->
+      <div class="card" data-cat="network" data-rel="stack" data-name="zscaler zero trust ztna sase" data-tags="zero trust network access ztna proxy cloud sase">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">Zscaler</span><span class="cat-tag">Zero Trust / ZTNA</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / stack</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Cloud-delivered SASE and ZTNA. Proxies user connections, enforces policy, prevents lateral movement via network segmentation. Does not analyze identity attack paths in AD.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Zscaler enforces zero trust at the network layer. Saporo enforces zero trust at the identity layer — eliminating paths that exist regardless of network controls. If they're building a zero trust architecture, both are part of the stack."</div></div>
+        </div>
+      </div>
+
+      <div class="no-results" id="no-results">No tools matched. Try a different name or keyword.</div>
+    </div>
+
+    <!-- Quick Reference -->
+    <div class="ref-panel" id="refPanel">
+      <div class="ref-header" onclick="toggleRef()">
+        <span class="ref-title"><span class="ref-icon">S</span>Saporo Quick Reference — Differentiators &amp; One-Liners</span>
+        <span class="chevron" id="refChevron">&#9660;</span>
+      </div>
+      <div class="ref-body">
+        <div class="ref-section-label">Key differentiators</div>
+        <div class="diff-grid">
+          <div class="diff-item"><div class="diff-num">01 — SCALE</div><div class="diff-text">In-memory graph engine processes billions of attack paths in real time. No other vendor matches this.</div></div>
+          <div class="diff-item"><div class="diff-num">02 — CHOKEPOINTS</div><div class="diff-text">One fix can collapse millions of paths. Minimum effort for maximum risk reduction.</div></div>
+          <div class="diff-item"><div class="diff-num">03 — HYBRID</div><div class="diff-text">On-prem AD + Entra + AWS + Okta in one native graph. Not bolted together.</div></div>
+          <div class="diff-item"><div class="diff-num">04 — REMEDIATION</div><div class="diff-text">Not just findings — triage-ready workflows with AI-assisted guidance.</div></div>
+          <div class="diff-item"><div class="diff-num">05 — OUTCOME</div><div class="diff-text">~80% of attack paths eliminated in year one. 140%+ NRR. 5.9M+ paths eliminated across customer base.</div></div>
+          <div class="diff-item"><div class="diff-num">STAT</div><div class="diff-text">~80% of cyber incidents are identity-based. 107% improvement in attack resistance per platform data.</div></div>
+        </div>
+        <div class="ref-section-label">One-liners</div>
+        <div class="liners-grid">
+          <div class="liner-item"><div class="liner-ctx">SDR / cold outreach</div><div class="liner-quote">"Saporo maps every attack path across your identity environment — AD, Entra, AWS, Okta — and tells you the 5 changes that eliminate 80% of your risk. Most enterprises have hundreds of millions of paths they've never seen."</div></div>
+          <div class="liner-item"><div class="liner-ctx">CISO discovery</div><div class="liner-quote">"How confident are you that you'd know which identity misconfigurations in your environment could be chained together to reach a Domain Controller?"</div></div>
+          <div class="liner-item"><div class="liner-ctx">Technical champion</div><div class="liner-quote">"Most tools give you a list of findings. Saporo gives you a graph — the same view an attacker has — and then shows you the chokepoints where one fix collapses millions of paths."</div></div>
+          <div class="liner-item"><div class="liner-ctx">vs. CrowdStrike / EDR / "we have detection covered"</div><div class="liner-quote">"Those tools are excellent at detection and response. Saporo works upstream — it finds and eliminates the attack paths before they're exploited. Complementary, not competitive."</div></div>
+        </div>
+      </div>
+    </div>
+  </div><!-- end tab-tools -->
+
+  <!-- ===== GLOSSARY TAB ===== -->
+  <div id="tab-glossary" style="display:none">
+    <div class="gloss-search-wrap">
+      <span class="gloss-search-icon">&#9906;</span>
+      <input type="text" id="glossSearch" placeholder="Search acronym or definition..." autocomplete="off" />
+    </div>
+    <div class="gloss-cat-filters" id="glossFilters">
+      <button class="filter-btn active" data-gcat="all">All</button>
+      <button class="filter-btn" data-gcat="identity">Identity &amp; Access</button>
+      <button class="filter-btn" data-gcat="protocol">Protocols &amp; Standards</button>
+      <button class="filter-btn" data-gcat="threat">Threat &amp; Detection</button>
+      <button class="filter-btn" data-gcat="cloud">Cloud &amp; Network</button>
+      <button class="filter-btn" data-gcat="framework">Frameworks &amp; Compliance</button>
+      <button class="filter-btn" data-gcat="business">Business / GTM</button>
+      <button class="filter-btn" data-gcat="technical">Technical</button>
+    </div>
+    <div class="gloss-grid" id="glossGrid"></div>
+  </div>
+
+</div><!-- end page -->
+
+<script>
+// ── TAB SWITCHER ──────────────────────────────────────────────
+function showTab(tab, btn) {
+  document.getElementById('tab-tools').style.display    = tab === 'tools'    ? '' : 'none';
+  document.getElementById('tab-glossary').style.display = tab === 'glossary' ? '' : 'none';
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (tab === 'glossary') renderGlossary();
+}
+
+// ── TOOLS LOGIC ───────────────────────────────────────────────
+const TOOLS = Array.from(document.querySelectorAll('.card'));
+
+function toggle(header) {
+  const card = header.closest('.card');
+  const wasOpen = card.classList.contains('open');
+  TOOLS.forEach(c => c.classList.remove('open'));
+  if (!wasOpen) card.classList.add('open');
+}
+
+function toggleRef() {
+  const panel = document.getElementById('refPanel');
+  const chevron = document.getElementById('refChevron');
+  panel.classList.toggle('open');
+  chevron.style.transform = panel.classList.contains('open') ? 'rotate(180deg)' : '';
+}
+
+function clearSearch() {
+  document.getElementById('search').value = '';
+  document.getElementById('clearBtn').classList.remove('visible');
+  applyFilters();
+  document.getElementById('search').focus();
+}
+
+const searchInput = document.getElementById('search');
+const clearBtn    = document.getElementById('clearBtn');
+const filterBtns  = document.querySelectorAll('.filters .filter-btn');
+const noResults   = document.getElementById('no-results');
+const countBadge  = document.getElementById('countBadge');
+let activeFilter  = 'all';
+
+function applyFilters() {
+  const q = searchInput.value.toLowerCase().trim();
+  clearBtn.classList.toggle('visible', q.length > 0);
+  let visible = 0;
+  TOOLS.forEach(card => {
+    const name = (card.dataset.name || '').toLowerCase();
+    const tags = (card.dataset.tags || '').toLowerCase();
+    const cat  = (card.dataset.cat  || '').toLowerCase();
+    const body = card.querySelector('.card-body')?.textContent.toLowerCase() || '';
+    const matchSearch = !q || name.includes(q) || tags.includes(q) || cat.includes(q) || body.includes(q);
+    const matchCat    = activeFilter === 'all' || cat === activeFilter;
+    if (matchSearch && matchCat) { card.style.display = ''; visible++; }
+    else { card.style.display = 'none'; card.classList.remove('open'); }
+  });
+  noResults.style.display = visible === 0 ? 'block' : 'none';
+  countBadge.textContent = visible === TOOLS.length ? TOOLS.length + ' tools' : visible + ' / ' + TOOLS.length + ' tools';
+}
+
+searchInput.addEventListener('input', applyFilters);
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+    applyFilters();
+  });
+});
+
+document.addEventListener('keydown', e => {
+  const active = document.getElementById('tab-tools').style.display !== 'none';
+  if (e.key === '/' && active && document.activeElement !== searchInput) { e.preventDefault(); searchInput.focus(); searchInput.select(); }
+  if (e.key === 'Escape') { clearSearch(); searchInput.blur(); }
+});
+
+countBadge.textContent = TOOLS.length + ' tools';
+
+// ── GLOSSARY DATA ─────────────────────────────────────────────
+const GLOSSARY = [
+  // Identity & Access
+  {a:'AD',     full:'Active Directory',                          def:'Microsoft\'s on-premises directory service. Stores identity, credential, and policy data for Windows environments. The primary attack surface Saporo analyzes.',                                 cat:'identity'},
+  {a:'ADCS',   full:'Active Directory Certificate Services',     def:'Microsoft PKI role that issues and manages digital certificates. A common attack vector — misconfigured ADCS allows privilege escalation via certificate templates.',                          cat:'identity'},
+  {a:'ADFS',   full:'Active Directory Federation Services',      def:'Microsoft\'s on-premises federation service. Enables SSO and token-based authentication across organizations and applications.',                                                                cat:'identity'},
+  {a:'CIAM',   full:'Customer Identity and Access Management',   def:'IAM capabilities focused on external (customer-facing) identities — registration, login, MFA, and consent management. Distinct from workforce IAM.',                                            cat:'identity'},
+  {a:'CIEM',   full:'Cloud Infrastructure Entitlement Management', def:'Technology that discovers and right-sizes excessive permissions in cloud environments (AWS, Azure, GCP). Focuses on what identities can do in cloud, not attack paths.',                     cat:'identity'},
+  {a:'IAM',    full:'Identity and Access Management',            def:'Broad category covering how organizations manage digital identities and control access to resources. Includes provisioning, authentication, authorization, and governance.',                      cat:'identity'},
+  {a:'IdP',    full:'Identity Provider',                         def:'A system that creates, maintains, and manages identity information and provides authentication services. Examples: Okta, Azure AD, Ping Identity.',                                              cat:'identity'},
+  {a:'IGA',    full:'Identity Governance and Administration',    def:'Subset of IAM focused on access certifications, role management, policy enforcement, and compliance reporting. Key vendors: SailPoint, Saviynt.',                                                cat:'identity'},
+  {a:'ISPM',   full:'Identity Security Posture Management',      def:'Saporo\'s primary category. Continuously assesses identity configurations, attack paths, and risk across hybrid environments. Proactive posture vs. reactive detection.',                       cat:'identity'},
+  {a:'ITDR',   full:'Identity Threat Detection and Response',    def:'Gartner-defined category covering detection of identity-based attacks (credential theft, lateral movement, privilege escalation) and response actions.',                                        cat:'identity'},
+  {a:'JIT',    full:'Just-In-Time (access)',                     def:'PAM concept where elevated privileges are granted only when needed and automatically revoked. Reduces standing privilege exposure.',                                                              cat:'identity'},
+  {a:'MFA',    full:'Multi-Factor Authentication',               def:'Authentication requiring two or more verification factors (password + something you have/are). A core identity control — but only as strong as the path to those accounts.',                   cat:'identity'},
+  {a:'PAM',    full:'Privileged Access Management',              def:'Controls and audits access to privileged accounts (admins, service accounts, root). Key vendors: CyberArk, BeyondTrust, Delinea. Saporo identifies which accounts most need PAM coverage.',     cat:'identity'},
+  {a:'PIM',    full:'Privileged Identity Management',            def:'Microsoft Entra PIM specifically — enables JIT activation of privileged roles in Azure AD, with approval workflows and time-limited elevation.',                                                 cat:'identity'},
+  {a:'RBAC',   full:'Role-Based Access Control',                 def:'Access control model where permissions are assigned to roles, and users are assigned to roles. A fundamental identity security control across AD and cloud environments.',                      cat:'identity'},
+  {a:'SSO',    full:'Single Sign-On',                            def:'Authentication scheme allowing users to log in once and access multiple applications. Reduces credential sprawl but means a single compromised credential has wide blast radius.',               cat:'identity'},
+
+  // Protocols & Standards
+  {a:'DCSync', full:'Domain Controller Synchronization',         def:'AD replication technique abused by attackers with replication rights to extract password hashes for all domain accounts. A high-value attack path target for Saporo.',                         cat:'protocol'},
+  {a:'GPO',    full:'Group Policy Object',                       def:'Configuration settings applied to AD objects (users, computers). Misconfigured GPOs are a common attack vector — GPO modification can lead to privilege escalation.',                           cat:'protocol'},
+  {a:'Kerberos', full:'Kerberos Authentication Protocol',        def:'Default authentication protocol in AD environments. Basis for attacks like Kerberoasting (extracting service account password hashes) and Pass-the-Ticket.',                                   cat:'protocol'},
+  {a:'LAPS',   full:'Local Administrator Password Solution',     def:'Microsoft tool that manages and rotates local administrator passwords on domain-joined machines. Reduces lateral movement risk from shared local admin credentials.',                           cat:'protocol'},
+  {a:'LDAP',   full:'Lightweight Directory Access Protocol',     def:'Protocol for accessing and modifying directory services (like AD). LDAP queries are used by attackers for AD enumeration — a common early-stage attack action.',                               cat:'protocol'},
+  {a:'NTLM',   full:'NT LAN Manager',                            def:'Legacy Windows authentication protocol. Weaker than Kerberos and vulnerable to Pass-the-Hash attacks. Disabling NTLM is a common Saporo recommendation.',                                      cat:'protocol'},
+  {a:'OAuth',  full:'Open Authorization',                        def:'Authorization framework for delegated access to resources. Widely used for cloud application integrations. OAuth token theft is a growing cloud identity attack vector.',                       cat:'protocol'},
+  {a:'OIDC',   full:'OpenID Connect',                            def:'Identity layer on top of OAuth 2.0. Used for federated authentication. Misconfigured OIDC integrations can expose sensitive resources.',                                                        cat:'protocol'},
+  {a:'SAML',   full:'Security Assertion Markup Language',        def:'XML-based standard for exchanging authentication and authorization data between an IdP and a service provider. Widely used for enterprise SSO federations.',                                    cat:'protocol'},
+  {a:'SPN',    full:'Service Principal Name',                    def:'Unique identifier for a service instance in AD. SPNs are used in Kerberoasting attacks — attackers request Kerberos tickets for SPNs and crack them offline.',                                 cat:'protocol'},
+
+  // Threat & Detection
+  {a:'APT',    full:'Advanced Persistent Threat',                def:'A sophisticated, long-term attack campaign, often nation-state-sponsored, targeting specific organizations. Identity attack paths are a primary APT lateral movement technique.',               cat:'threat'},
+  {a:'BAS',    full:'Breach and Attack Simulation',              def:'Automated testing of security controls by simulating attacker techniques. Related to attack path simulation but typically focused on detection validation rather than posture.',                  cat:'threat'},
+  {a:'C2',     full:'Command and Control',                       def:'Infrastructure attackers use to communicate with compromised systems. After lateral movement via identity paths, C2 channels are established for persistent access.',                            cat:'threat'},
+  {a:'EDR',    full:'Endpoint Detection and Response',           def:'Security tooling that monitors endpoint activity and detects/responds to threats. Key vendors: CrowdStrike, SentinelOne, Microsoft Defender. Complementary to Saporo — detection vs. prevention.', cat:'threat'},
+  {a:'IOA',    full:'Indicator of Attack',                       def:'Behavioral evidence that an attack is in progress (e.g., DCSync observed). Contrasts with IOC, which is post-compromise artifact evidence.',                                                    cat:'threat'},
+  {a:'IOC',    full:'Indicator of Compromise',                   def:'Artifact evidence that a system has been compromised (IP address, file hash, domain). Reactive by nature — Saporo operates before IOCs appear.',                                                cat:'threat'},
+  {a:'ITDR',   full:'Identity Threat Detection and Response',    def:'See Identity section. Detection-focused counterpart to ISPM\'s posture focus.',                                                                                                                 cat:'threat'},
+  {a:'MDR',    full:'Managed Detection and Response',            def:'Outsourced SOC service providing 24/7 threat monitoring and response. Often built on top of an EDR/SIEM stack. Does not address identity posture.',                                             cat:'threat'},
+  {a:'SIEM',   full:'Security Information and Event Management', def:'Platform that aggregates, correlates, and analyzes log data for threat detection. Key vendors: Splunk, Microsoft Sentinel, IBM QRadar. Complementary to Saporo — reactive log-based detection.', cat:'threat'},
+  {a:'SOC',    full:'Security Operations Center',                def:'Team and/or facility responsible for monitoring, detecting, and responding to security threats in real time. A primary buyer persona and beneficiary of Saporo findings.',                       cat:'threat'},
+  {a:'SOAR',   full:'Security Orchestration, Automation and Response', def:'Platform automating security workflows and incident response playbooks. Can ingest Saporo findings as triggers for automated remediation workflows.',                                    cat:'threat'},
+  {a:'TTP',    full:'Tactics, Techniques, and Procedures',       def:'Attacker behavior patterns, as catalogued by MITRE ATT&CK. Saporo maps identity attack paths to ATT&CK TTPs for framing and compliance alignment.',                                            cat:'threat'},
+  {a:'UEBA',   full:'User and Entity Behavior Analytics',        def:'Analyzes behavioral patterns to detect anomalous activity. Detects attacks in progress — complementary to Saporo\'s proactive attack path elimination.',                                       cat:'threat'},
+  {a:'XDR',    full:'Extended Detection and Response',           def:'Evolution of EDR that correlates telemetry across endpoint, network, identity, and cloud. Key vendors: CrowdStrike, SentinelOne, Palo Alto Cortex. Detection-focused, not posture-focused.',    cat:'threat'},
+
+  // Cloud & Network
+  {a:'CNAPP',  full:'Cloud Native Application Protection Platform', def:'Integrated platform combining CSPM, CWPP, container security, and code security for cloud-native environments. Key vendors: Wiz, Orca, Prisma Cloud.',                                   cat:'cloud'},
+  {a:'CSPM',   full:'Cloud Security Posture Management',         def:'Identifies misconfigurations and compliance violations in cloud infrastructure (AWS, Azure, GCP). Covers cloud workloads — Saporo covers the identity attack paths within and across those clouds.', cat:'cloud'},
+  {a:'CWPP',   full:'Cloud Workload Protection Platform',        def:'Security for cloud workloads — VMs, containers, serverless. A component of CNAPP. Complementary to Saporo\'s identity focus.',                                                                 cat:'cloud'},
+  {a:'NGFW',   full:'Next-Generation Firewall',                  def:'Firewall with deep packet inspection, application awareness, and intrusion prevention. Key vendors: Palo Alto, Fortinet, Check Point. Network layer — complementary to Saporo\'s identity layer.', cat:'cloud'},
+  {a:'SASE',   full:'Secure Access Service Edge',                def:'Gartner-coined architecture combining network security (NGFW, SWG, CASB) with SD-WAN in a cloud-delivered model. Key vendors: Zscaler, Palo Alto Prisma, Netskope.',                           cat:'cloud'},
+  {a:'SD-WAN', full:'Software-Defined Wide Area Network',        def:'Network architecture abstracting WAN connectivity from hardware. Often bundled with SASE platforms.',                                                                                           cat:'cloud'},
+  {a:'VPC',    full:'Virtual Private Cloud',                     def:'Isolated cloud network environment in AWS, Azure, or GCP. VPC misconfigurations can create cross-environment identity attack paths Saporo maps.',                                                cat:'cloud'},
+  {a:'VPN',    full:'Virtual Private Network',                   def:'Encrypted tunnel for remote access. Being replaced by ZTNA in zero trust architectures. VPN credential theft is a common initial access vector.',                                              cat:'cloud'},
+  {a:'ZT',     full:'Zero Trust',                                def:'Security model that eliminates implicit trust and requires continuous verification. Saporo supports zero trust by eliminating the identity attack paths that undermine network-layer controls.',  cat:'cloud'},
+  {a:'ZTNA',   full:'Zero Trust Network Access',                 def:'Network access approach granting least-privilege access to specific resources without VPN. Key vendors: Zscaler, Palo Alto, Cloudflare. Network layer of zero trust.',                          cat:'cloud'},
+
+  // Frameworks & Compliance
+  {a:'ANSSI',  full:'Agence nationale de la sécurité des systèmes d\'information', def:'French national cybersecurity agency. Published the AD security guide that heavily influenced Saporo\'s early framework alignment. Strong in Saporo\'s EU customer base.', cat:'framework'},
+  {a:'ATT&CK', full:'Adversarial Tactics, Techniques, and Common Knowledge',       def:'MITRE\'s framework cataloguing adversary behavior. Saporo maps attack paths to ATT&CK techniques (e.g., T1003 OS Credential Dumping, T1558 Kerberoasting).',             cat:'framework'},
+  {a:'CIS',    full:'Center for Internet Security',              def:'Nonprofit producing the CIS Controls and CIS Benchmarks. Saporo findings map to CIS Controls, particularly Control 5 (Account Management) and Control 6 (Access Control Management).',         cat:'framework'},
+  {a:'CMMC',   full:'Cybersecurity Maturity Model Certification', def:'US DoD supply chain cybersecurity framework. Relevant for Saporo prospects in the defense industrial base or federal contracting space.',                                                     cat:'framework'},
+  {a:'CVE',    full:'Common Vulnerabilities and Exposures',      def:'Standardized identifier for publicly known security vulnerabilities. Managed by MITRE. Vulnerability management tools (Tenable, Qualys) track CVEs — distinct from identity misconfigs Saporo tracks.', cat:'framework'},
+  {a:'HIPAA',  full:'Health Insurance Portability and Accountability Act', def:'US healthcare data protection regulation. Saporo is relevant to HIPAA-covered entities needing to protect access to PHI systems via identity controls.',                           cat:'framework'},
+  {a:'ISO 27001', full:'International Organization for Standardization 27001', def:'International standard for information security management systems. Saporo v4.1 is ISO 27001 certified. Findings map to ISO controls for audit evidence.',                   cat:'framework'},
+  {a:'NIST CSF', full:'NIST Cybersecurity Framework',            def:'US voluntary framework for managing cyber risk across five functions: Identify, Protect, Detect, Respond, Recover. Saporo maps to Identify and Protect functions primarily.',                  cat:'framework'},
+  {a:'SOC 2',  full:'Service Organization Control 2',            def:'AICPA audit standard assessing security, availability, and confidentiality controls. Saporo\'s evidence (access paths, remediations) supports SOC 2 audit preparation.',                       cat:'framework'},
+
+  // Business / GTM
+  {a:'AE',     full:'Account Executive',                         def:'Sales role responsible for closing deals. Paired with an SE on Saporo\'s US GTM motion. AEs own the commercial relationship; SEs own technical validation.',                                   cat:'business'},
+  {a:'ARR',    full:'Annual Recurring Revenue',                  def:'Annualized value of recurring subscription revenue. The primary growth metric for Saporo as a SaaS/subscription business.',                                                                    cat:'business'},
+  {a:'CISO',   full:'Chief Information Security Officer',        def:'Executive responsible for an organization\'s information security program. Primary economic buyer for Saporo. Cares about risk reduction metrics, board reporting, and cyber insurance.',       cat:'business'},
+  {a:'GRC',    full:'Governance, Risk, and Compliance',          def:'Organizational discipline aligning IT with business goals, managing risk, and meeting compliance requirements. GRC teams are a secondary buyer persona for Saporo (framework alignment angle).', cat:'business'},
+  {a:'ICP',    full:'Ideal Customer Profile',                    def:'Description of the type of organization most likely to buy and succeed with a product. Saporo ICP: large enterprise with complex hybrid AD + cloud identity environments, security-mature.',    cat:'business'},
+  {a:'ITSM',   full:'IT Service Management',                     def:'Processes for delivering and managing IT services. ServiceNow is the dominant ITSM platform. Saporo findings can integrate into ITSM ticketing workflows.',                                    cat:'business'},
+  {a:'MRR',    full:'Monthly Recurring Revenue',                 def:'Monthly value of recurring subscription revenue. Granular view of ARR.',                                                                                                                       cat:'business'},
+  {a:'NRR',    full:'Net Revenue Retention',                     def:'Measures revenue retained from existing customers including expansions and churn. Saporo\'s NRR is 140%+ — a key proof point of customer value and expansion motion.',                         cat:'business'},
+  {a:'POC',    full:'Proof of Concept',                          def:'Technical trial demonstrating product value in the prospect\'s environment. Saporo\'s primary validation motion — coverage differences become visible quickly in a real environment.',           cat:'business'},
+  {a:'ROI',    full:'Return on Investment',                      def:'Financial measure of value delivered relative to cost. Saporo ROI is built around attack paths eliminated, risk reduction metrics, and avoided breach cost.',                                   cat:'business'},
+  {a:'SDR',    full:'Sales Development Representative',          def:'Outbound prospecting role responsible for pipeline generation. OH.io-supplied SDRs are executing Saporo\'s US outbound motion.',                                                               cat:'business'},
+  {a:'SE',     full:'Sales Engineer',                            def:'Technical sales role supporting AEs with demos, POCs, and competitive positioning. Jon\'s role — embedded SE at Saporo via OH.io.',                                                            cat:'business'},
+  {a:'SLA',    full:'Service Level Agreement',                   def:'Contractual commitment to service availability and support response times. Relevant for US buyers concerned about European vendor support coverage.',                                            cat:'business'},
+
+  // Technical
+  {a:'AI',     full:'Artificial Intelligence',                   def:'Saporo v4.1 includes AI-assisted remediation — LLM-generated explanations for findings and remediation guidance to reduce analyst effort.',                                                     cat:'technical'},
+  {a:'API',    full:'Application Programming Interface',         def:'Saporo is API-first — agentless deployment relies on APIs to ingest data from AD, Entra, AWS, and Okta without installing agents.',                                                            cat:'technical'},
+  {a:'CA',     full:'Certificate Authority',                     def:'Entity issuing digital certificates. Misconfigured AD Certificate Services (ADCS) CAs are a high-severity attack path vector Saporo detects.',                                                  cat:'technical'},
+  {a:'DC',     full:'Domain Controller',                         def:'Server running AD DS that authenticates users and enforces policies. Reaching a DC is a primary attacker objective. Saporo\'s chokepoint analysis focuses on paths that reach Tier-0 assets like DCs.', cat:'technical'},
+  {a:'DLP',    full:'Data Loss Prevention',                      def:'Technology preventing unauthorized data exfiltration. Adjacent to identity security — compromised identities are the primary DLP bypass mechanism.',                                            cat:'technical'},
+  {a:'DNS',    full:'Domain Name System',                        def:'Protocol resolving hostnames to IP addresses. DNS poisoning and AD-integrated DNS misconfigs can create identity attack paths.',                                                                 cat:'technical'},
+  {a:'EPM',    full:'Endpoint Privilege Management',             def:'Removing local admin rights from end-user endpoints to reduce privilege escalation paths. A component of BeyondTrust and CyberArk offerings.',                                                  cat:'technical'},
+  {a:'LLM',    full:'Large Language Model',                      def:'AI model underlying Saporo\'s v4.1 AI-assisted remediation feature — generates plain-language explanations of findings and recommended remediation steps.',                                      cat:'technical'},
+  {a:'OT',     full:'Operational Technology',                    def:'Hardware and software controlling physical/industrial systems. Identity paths can bridge IT and OT networks — a growing concern in manufacturing and critical infrastructure.',                  cat:'technical'},
+  {a:'SaaS',   full:'Software as a Service',                     def:'Cloud-delivered software subscription model. Saporo is delivered as SaaS — agentless, API-driven, no on-premises infrastructure required.',                                                    cat:'technical'},
+  {a:'TLS',    full:'Transport Layer Security',                  def:'Cryptographic protocol securing network communications. Relevant in the context of LDAPS (LDAP over TLS) — unencrypted LDAP is a network exposure Saporo may flag.',                           cat:'technical'},
+];
+
+let glossRendered = false;
+let activeGlossFilter = 'all';
+
+function renderGlossary() {
+  if (glossRendered) return;
+  glossRendered = true;
+  const grid = document.getElementById('glossGrid');
+  grid.innerHTML = '';
+  GLOSSARY.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'gloss-card';
+    card.dataset.cat = item.cat;
+    card.dataset.search = (item.a + ' ' + item.full + ' ' + item.def).toLowerCase();
+    card.innerHTML = `<div class="gloss-acronym">${item.a}</div><div class="gloss-full">${item.full}</div><div class="gloss-def">${item.def}</div><span class="gloss-cat-badge gcat-${item.cat}">${catLabel(item.cat)}</span>`;
+    grid.appendChild(card);
+  });
+
+  document.getElementById('glossSearch').addEventListener('input', filterGlossary);
+
+  document.querySelectorAll('#glossFilters .filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#glossFilters .filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeGlossFilter = btn.dataset.gcat;
+      filterGlossary();
+    });
+  });
+}
+
+function catLabel(cat) {
+  return {identity:'Identity & Access', protocol:'Protocol / AD', threat:'Threat & Detection', cloud:'Cloud & Network', framework:'Framework / Compliance', business:'Business / GTM', technical:'Technical'}[cat] || cat;
+}
+
+function filterGlossary() {
+  const q = document.getElementById('glossSearch').value.toLowerCase().trim();
+  let visible = 0;
+  document.querySelectorAll('.gloss-card').forEach(card => {
+    const matchSearch = !q || card.dataset.search.includes(q);
+    const matchCat    = activeGlossFilter === 'all' || card.dataset.cat === activeGlossFilter;
+    if (matchSearch && matchCat) { card.style.display = ''; visible++; }
+    else card.style.display = 'none';
+  });
+  const noR = document.querySelector('.gloss-no-results');
+  if (noR) noR.style.display = visible === 0 ? 'block' : 'none';
+  if (visible === 0 && !noR) {
+    const el = document.createElement('div');
+    el.className = 'gloss-no-results';
+    el.textContent = 'No acronyms matched.';
+    document.getElementById('glossGrid').appendChild(el);
+  }
+}
+</script>
+</body>
+</html>
