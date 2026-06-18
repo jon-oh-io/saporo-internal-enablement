@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prospect Recon | Saporo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Roboto+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="saporo.css" />
+<style>
+
+/* fonts loaded via <link> in <head> — Inter + Roboto Mono (Saporo brand) */
+
+:root {
+  --bg:#12141D; --surface:#181B25; --surface-2:#20242F; --panel:#1A1D28;
+  --border:#2A2F3B; --border-soft:#20242F;
+  --text:#F5F6FA; --text-2:#9AA0B0; --text-3:#6E7385; --text-dim:#454B5A;
+  --coral:#FF715B; --coral-dim:#C7584A; --coral-dark:#34201C;
+  --purple:#5132C0; --violet:#8F2DF0;
+  --grad:linear-gradient(120deg,#FF715B 0%,#8F2DF0 55%,#5132C0 100%);
+  --green:#3CCF91; --green-dim:#2C9C6C; --green-dark:#16331F; --green-xdark:#0F2416;
+  --amber:#FF934F; --amber-dim:#C7703A;
+  --red:#FF5160; --red-dim:#C73D49;
+  --blue:#6E8BFF; --blue-dim:#46598F; --blue-dark:#1A2140;
+  /* full-bleed header to match this full-screen app */
+  --content-max:100%; --content-pad:20px;
+}
+
+* { box-sizing:border-box; margin:0; padding:0; }
+html, body { height:100%; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'Roboto Mono', ui-monospace, monospace;
+  font-size:13px;
+  display:flex; flex-direction:column; height:100vh; overflow:hidden;
+}
+
+/* app shell fills space under the shared site header */
+.screen { flex:1; min-height:0; display:flex; flex-direction:column; }
+
+/* ── TOOL TITLE STRIP ── */
+.topbar { flex-shrink:0; padding:10px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:16px; background:var(--surface); }
+.logo { font-family:'Inter',sans-serif; font-weight:800; font-size:1.05rem; letter-spacing:-0.01em; color:var(--text); }
+.logo .dim { color:var(--coral); }
+.topbar-sub { font-family:'Roboto Mono',monospace; font-size:11px; color:var(--text-3); letter-spacing:0.08em; flex:1; text-transform:uppercase; }
+#clockDisplay { font-family:'Roboto Mono',monospace; font-size:11px; color:var(--text-3); letter-spacing:0.06em; }
+
+/* ── MAIN TABS ── */
+.tab-bar { flex-shrink:0; display:flex; border-bottom:1px solid var(--border); background:var(--surface); }
+.tab { font-family:'Roboto Mono',monospace; font-size:0.78rem; letter-spacing:0.08em; text-transform:uppercase; padding:9px 22px; cursor:pointer; color:var(--text-2); border-right:1px solid var(--border); transition:color .15s, background .15s; user-select:none; }
+.tab:hover { color:var(--text); background:rgba(255,255,255,0.02); }
+.tab.active { color:var(--coral); background:var(--bg); border-bottom:2px solid var(--coral); }
+.tab.hdr-tab.active { color:var(--blue); border-bottom-color:var(--blue); }
+
+.body-split { flex:1; display:flex; overflow:hidden; min-height:0; }
+
+/* ── SIDEBAR ── */
+.sidebar { width:260px; flex-shrink:0; border-right:1px solid var(--border); display:flex; flex-direction:column; overflow:hidden; background:var(--surface); }
+.sidebar-tabs { display:flex; border-bottom:1px solid var(--border); flex-shrink:0; }
+.sidebar-tab { font-family:'Roboto Mono',monospace; font-size:0.7rem; letter-spacing:0.06em; text-transform:uppercase; padding:7px 12px; cursor:pointer; color:var(--text-2); flex:1; text-align:center; border-right:1px solid var(--border); user-select:none; transition:color .1s; }
+.sidebar-tab:last-child { border-right:none; }
+.sidebar-tab:hover { color:var(--text); }
+.sidebar-tab.active { color:var(--coral); border-bottom:2px solid var(--coral); background:var(--bg); }
+.sidebar-panel { display:none; flex:1; overflow-y:auto; }
+.sidebar-panel.active { display:block; }
+.sidebar-panel::-webkit-scrollbar { width:6px; }
+.sidebar-panel::-webkit-scrollbar-track { background:transparent; }
+.sidebar-panel::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+
+#bootLog { padding:12px 14px; font-size:11px; color:var(--text-3); line-height:1.85; }
+#bootLog .ok { color:var(--green); }
+#bootLog .err { color:var(--red); }
+#bootLog .warn { color:var(--amber); }
+#bootLog .info { color:var(--blue); }
+#bootLog .dim2 { color:var(--text-dim); }
+
+#whyPanel { padding:12px 14px; font-size:11px; color:var(--text-2); line-height:1.85; }
+#whyPanel .wh { color:var(--coral); }
+#whyPanel .wn { color:var(--amber); }
+
+.content-area { flex:1; display:flex; flex-direction:column; overflow:hidden; min-height:0; }
+.main-pane { display:none; flex:1; flex-direction:column; overflow:hidden; min-height:0; }
+.main-pane.active { display:flex; }
+
+/* ── DNS INPUT ── */
+.dns-input-bar { flex-shrink:0; padding:14px 16px 12px; border-bottom:1px solid var(--border); background:var(--surface); }
+.input-label { font-family:'Roboto Mono',monospace; font-size:10px; letter-spacing:0.16em; color:var(--text-3); margin-bottom:8px; text-transform:uppercase; }
+.prompt-wrap { display:flex; border:1px solid var(--coral); border-radius:8px; overflow:hidden; box-shadow:0 0 0 3px rgba(255,113,91,0.08); }
+.prompt-prefix { font-family:'Roboto Mono',monospace; font-size:0.8rem; padding:11px 13px; background:var(--coral-dark); border-right:1px solid var(--coral); color:var(--coral); white-space:nowrap; letter-spacing:0.04em; display:flex; align-items:center; }
+input[type="text"] { flex:1; background:var(--bg); border:none; color:var(--text); font-family:'Roboto Mono',monospace; font-size:14px; padding:11px 14px; outline:none; caret-color:var(--coral); letter-spacing:0.03em; }
+input::placeholder { color:var(--text-3); font-size:12px; }
+input:focus { background:var(--surface-2); }
+.run-btn { background:var(--coral); color:#12141D; border:none; font-family:'Roboto Mono',monospace; font-weight:700; font-size:0.82rem; letter-spacing:0.08em; padding:11px 24px; cursor:pointer; transition:filter .1s; white-space:nowrap; }
+.run-btn:hover { filter:brightness(1.1); }
+.run-btn:active { filter:brightness(0.9); }
+.run-btn:disabled { background:var(--coral-dim); color:rgba(18,20,29,0.6); cursor:not-allowed; }
+.err-msg { color:var(--red); font-size:11px; margin-top:6px; display:none; letter-spacing:0.04em; }
+
+.dns-split { flex:1; display:flex; overflow:hidden; min-height:0; }
+.dns-checks { width:44%; flex-shrink:0; border-right:1px solid var(--border); overflow-y:auto; padding:14px; }
+.dns-results { flex:1; overflow-y:auto; padding:14px 16px; }
+.dns-checks::-webkit-scrollbar, .dns-results::-webkit-scrollbar { width:6px; }
+.dns-checks::-webkit-scrollbar-thumb, .dns-results::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+.dns-checks::-webkit-scrollbar-track, .dns-results::-webkit-scrollbar-track { background:transparent; }
+
+.section-divider { font-family:'Roboto Mono',monospace; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:var(--text-3); margin:14px 0 8px; display:flex; align-items:center; gap:10px; }
+.section-divider:first-child { margin-top:0; }
+.section-divider::after { content:''; flex:1; height:1px; background:var(--border); }
+
+.check-row { border:1px solid var(--border); border-radius:8px; margin-bottom:6px; background:var(--surface); transition:border-color .2s, box-shadow .2s; }
+.check-row.pass { border-color:var(--green); box-shadow:0 0 0 1px rgba(60,207,145,0.15); }
+.check-row.fail { border-color:var(--red); box-shadow:0 0 0 1px rgba(255,81,96,0.15); }
+.check-row.warn { border-color:var(--amber); box-shadow:0 0 0 1px rgba(255,147,79,0.15); }
+.check-row.running { border-color:var(--coral-dim); }
+.check-row.info { border-color:var(--blue); }
+
+.row-head { display:flex; align-items:baseline; padding:8px 11px; gap:8px; border-bottom:1px solid var(--border); }
+.row-num { font-family:'Roboto Mono',monospace; font-size:0.78rem; color:var(--text-3); min-width:24px; }
+.row-label { flex:1; font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:var(--text); }
+.row-label.blue-label { color:var(--blue); }
+.row-status { font-family:'Roboto Mono',monospace; font-size:0.78rem; letter-spacing:0.04em; white-space:nowrap; }
+.s-wait { color:var(--text-dim); }
+.s-run { color:var(--coral); }
+.s-pass { color:var(--green); }
+.s-fail { color:var(--red); }
+.s-warn { color:var(--amber); }
+.s-info { color:var(--blue); }
+.row-detail { padding:6px 11px 8px 44px; font-size:11px; color:var(--text-2); line-height:1.7; }
+.row-detail .val { color:var(--green); display:block; word-break:break-all; margin-top:3px; }
+.row-detail .val-blue { color:var(--blue); display:block; word-break:break-all; margin-top:3px; }
+
+.results-placeholder { border:1px solid var(--border); border-radius:8px; padding:18px 20px; background:var(--surface); font-size:11px; color:var(--text-3); line-height:2; letter-spacing:0.04em; }
+.results-placeholder .ph-title { font-family:'Roboto Mono',monospace; font-size:1rem; color:var(--text-2); letter-spacing:0.06em; margin-bottom:10px; display:block; text-transform:uppercase; }
+.results-placeholder .ph-item { display:block; padding:3px 0; }
+.results-placeholder .ph-bar { color:var(--border); }
+
+.result-block { margin-bottom:12px; }
+.result-header { font-family:'Roboto Mono',monospace; font-size:0.72rem; letter-spacing:0.08em; color:var(--text-3); padding:5px 0; border-bottom:1px solid var(--border); margin-bottom:6px; text-transform:uppercase; }
+.result-value { font-size:11px; color:var(--text-2); line-height:1.8; word-break:break-all; letter-spacing:0.02em; }
+.result-value .rv { color:var(--text); display:block; }
+.result-value .rn { color:var(--text-3); }
+.result-value .rw { color:var(--amber); }
+.result-value .re { color:var(--red); }
+.result-value .rg { color:var(--green); }
+
+/* ── VERDICT ── */
+.verdict-box { display:none; border:1px solid var(--border); border-radius:10px; margin-top:14px; padding:16px 18px; background:var(--surface); position:relative; }
+.verdict-box.show { display:block; }
+.verdict-box::before { content:attr(data-label); position:absolute; top:-8px; left:16px; background:var(--bg); padding:0 8px; font-family:'Roboto Mono',monospace; font-size:10px; color:var(--text-3); letter-spacing:0.12em; }
+.verdict-box.confirmed { border-color:var(--green); }
+.verdict-box.partial { border-color:var(--amber); }
+.verdict-box.negative { border-color:var(--red); }
+.verdict-box.defender { border-color:var(--blue); box-shadow:0 0 0 1px rgba(110,139,255,0.15); }
+.verdict-title { font-family:'Inter',sans-serif; font-weight:800; font-size:1.4rem; letter-spacing:-0.02em; line-height:1.15; margin-bottom:8px; }
+.verdict-box.confirmed .verdict-title { color:var(--green); }
+.verdict-box.partial .verdict-title { color:var(--amber); }
+.verdict-box.negative .verdict-title { color:var(--red); }
+.verdict-box.defender .verdict-title { color:var(--blue); }
+.score-bar { font-family:'Roboto Mono',monospace; font-size:0.85rem; letter-spacing:0.03em; margin-bottom:8px; color:var(--text-2); }
+.sf { color:var(--green); }
+.sf2 { color:var(--blue); }
+.se { color:var(--border); }
+.verdict-sub { font-size:11px; color:var(--text-2); letter-spacing:0.03em; line-height:1.9; }
+.verdict-sub .hi { color:var(--green); }
+.verdict-sub .hiB { color:var(--blue); }
+.verdict-sub .hiA { color:var(--amber); }
+.verdict-sub .hiR { color:var(--red); }
+
+/* ── HEADER PANEL ── */
+.hdr-split { flex:1; display:flex; overflow:hidden; min-height:0; }
+.hdr-left { width:42%; flex-shrink:0; border-right:1px solid var(--border); display:flex; flex-direction:column; overflow-y:auto; padding:16px; gap:12px; }
+.hdr-right { flex:1; overflow-y:auto; padding:16px; }
+.hdr-left::-webkit-scrollbar, .hdr-right::-webkit-scrollbar { width:6px; }
+.hdr-left::-webkit-scrollbar-thumb, .hdr-right::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+.hdr-left::-webkit-scrollbar-track, .hdr-right::-webkit-scrollbar-track { background:transparent; }
+
+.howto-box { border:1px solid var(--border); border-radius:8px; background:var(--surface); padding:14px 16px; position:relative; }
+.howto-box::before { content:'[ HOW TO GET EMAIL HEADERS ]'; position:absolute; top:-8px; left:14px; background:var(--bg); padding:0 8px; font-family:'Roboto Mono',monospace; font-size:10px; color:var(--blue); letter-spacing:0.12em; }
+.howto-tabs { display:flex; gap:0; margin-bottom:12px; border-bottom:1px solid var(--border); }
+.howto-tab { font-family:'Roboto Mono',monospace; font-size:0.7rem; letter-spacing:0.06em; text-transform:uppercase; padding:5px 12px; cursor:pointer; color:var(--text-3); transition:color .1s; }
+.howto-tab.active { color:var(--blue); border-bottom:2px solid var(--blue); }
+.howto-tab:hover { color:var(--text); }
+.howto-content { display:none; font-size:11px; color:var(--text-2); line-height:1.9; }
+.howto-content.active { display:block; }
+.howto-content .step { color:var(--text); }
+.howto-content .note { color:var(--text-3); }
+
+.hdr-textarea-wrap { border:1px solid var(--blue); border-radius:8px; overflow:hidden; box-shadow:0 0 0 3px rgba(110,139,255,0.08); }
+.hdr-textarea-label { font-family:'Roboto Mono',monospace; font-size:0.72rem; letter-spacing:0.06em; padding:9px 14px; background:var(--blue-dark); border-bottom:1px solid var(--blue); color:var(--blue); }
+textarea { width:100%; background:var(--bg); border:none; color:var(--text); font-family:'Roboto Mono',monospace; font-size:11px; padding:10px 14px; outline:none; caret-color:var(--blue); resize:vertical; min-height:160px; max-height:320px; letter-spacing:0.02em; line-height:1.6; }
+textarea::placeholder { color:var(--text-3); }
+.analyze-btn { background:var(--blue); color:#12141D; border:none; font-family:'Roboto Mono',monospace; font-weight:700; font-size:0.82rem; letter-spacing:0.08em; padding:11px 26px; cursor:pointer; transition:filter .1s; display:block; width:100%; border-radius:8px; }
+.analyze-btn:hover { filter:brightness(1.1); }
+
+/* ── GATEWAY CALLOUT ── */
+.gateway-callout { display:none; border:1px solid var(--amber); border-radius:8px; background:var(--surface); padding:14px 16px; margin-top:10px; margin-bottom:12px; position:relative; }
+.gateway-callout.show { display:block; }
+.gateway-callout::before { content:'[ SECURITY GATEWAY DETECTED ]'; position:absolute; top:-8px; left:14px; background:var(--bg); padding:0 8px; font-family:'Roboto Mono',monospace; font-size:10px; color:var(--amber); letter-spacing:0.12em; }
+.gw-vendor { font-family:'Inter',sans-serif; font-weight:800; font-size:1.15rem; color:var(--amber); letter-spacing:-0.01em; margin-bottom:6px; }
+.gw-body { font-size:11px; color:var(--text-2); line-height:1.85; letter-spacing:0.02em; }
+.gw-body .gw-hi { color:var(--amber); }
+.gw-body .gw-dim { color:var(--text-3); }
+
+/* ── FOOTER ── */
+.footer-bar { flex-shrink:0; border-top:1px solid var(--border); padding:6px 20px; font-family:'Roboto Mono',monospace; font-size:10px; color:var(--text-3); letter-spacing:0.05em; display:flex; justify-content:space-between; gap:20px; background:var(--surface); }
+.footer-bar .hi { color:var(--coral); }
+
+@keyframes blink { 50%{opacity:0;} }
+.blink { animation:blink 1.1s step-end infinite; }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+.pulse { animation:pulse 0.9s ease-in-out infinite; }
+
+</style>
+</head>
+<body>
+<header>
+  <div class="nav-wrap">
+    <a class="logo-link" href="index.html" aria-label="Saporo — Home">
+      <svg class="logo-mark" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M5 27 L13 19 L21 19 L29 11" stroke="#FF715B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+        <path d="M5 11 L13 19 M21 19 L21 27" stroke="#F5F6FA" stroke-width="1.4" stroke-linecap="round" opacity="0.35"/>
+        <circle cx="5"  cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
+        <circle cx="13" cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
+        <circle cx="21" cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
+        <circle cx="29" cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
+        <circle cx="5"  cy="11" r="2"   fill="#F5F6FA"/>
+        <circle cx="29" cy="11" r="2.4" fill="#5132C0"/>
+        <circle cx="13" cy="19" r="2.4" fill="#FF715B"/>
+        <circle cx="21" cy="19" r="2.4" fill="#FF715B"/>
+        <circle cx="5"  cy="27" r="2.4" fill="#FF715B"/>
+        <circle cx="21" cy="27" r="2"   fill="#F5F6FA"/>
+        <circle cx="29" cy="27" r="1.7" fill="#F5F6FA" opacity="0.45"/>
+        <circle cx="13" cy="27" r="1.7" fill="#F5F6FA" opacity="0.45"/>
+      </svg>
+      <span class="logo-text">
+        <span class="logo-word">SAPORO</span>
+        <span class="logo-tag">Order in Chaos</span>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="index.html">Home</a>
+      <a href="competitive-lookup.html">Competitive</a>
+      <a href="recon.html" class="active">Recon</a>
+    </nav>
+  </div>
+</header>
+<div class="screen">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="logo">Prospect Recon <span class="dim">// DEFDET v2.5</span></div>
+    <div class="topbar-sub">// DNS + HEADER RECON // M365 &amp; DEFENDER FOR OFFICE 365 FINGERPRINTER</div>
+    <div id="clockDisplay"></div>
+  </div>
+
+  <!-- MAIN TAB BAR -->
+  <div class="tab-bar">
+    <div class="tab active" id="tab-dns" onclick="switchTab('dns')">[ DNS RECON ]</div>
+    <div class="tab hdr-tab" id="tab-hdr" onclick="switchTab('hdr')">[ EMAIL HEADER ANALYSIS ]</div>
+  </div>
+
+  <div class="body-split">
+
+    <!-- ── LEFT SIDEBAR ── -->
+    <div class="sidebar">
+      <div class="sidebar-tabs">
+        <div class="sidebar-tab active" id="stab-log" onclick="switchSidebar('log')">SYS LOG</div>
+        <div class="sidebar-tab" id="stab-why" onclick="switchSidebar('why')">WHY THIS WORKS</div>
+      </div>
+      <div class="sidebar-panel active" id="spanel-log">
+        <div id="bootLog"></div>
+      </div>
+      <div class="sidebar-panel" id="spanel-why">
+        <div id="whyPanel">
+          <span class="wh">// WHY DNS REVEALS M365</span><br><br>
+          DNS records are public — they are required for email routing and authentication to function, so every mail system must publish them. This makes them a reliable passive fingerprinting surface with no interaction required.<br><br>
+          <span class="wh">MX RECORDS</span><br>
+          Reveal where a domain receives mail. Microsoft uses a predictable hostname for Exchange Online: <span class="wh">[tenant].mail.protection.outlook.com</span><br><br>
+          <span class="wh">SPF RECORD</span><br>
+          Lists authorized sending servers. M365 tenants always include <span class="wh">spf.protection.outlook.com</span> in their SPF TXT record.<br><br>
+          <span class="wh">DKIM CNAMEs</span><br>
+          The strongest M365 signal. When DKIM is enabled in the M365 admin, two CNAME records are created that always resolve to <span class="wh">*.onmicrosoft.com</span> — a Microsoft-exclusive namespace. These only exist if DKIM was explicitly configured by an admin.<br><br>
+          <span class="wh">DMARC POLICY</span><br>
+          Queries <span class="wh">_dmarc.domain.com</span>. A <span class="wh">p=reject</span> policy requires significant admin effort and strongly correlates with active security management and Defender deployment.<br><br>
+          <span class="wh">MTA-STS</span><br>
+          Queries <span class="wh">_mta-sts.domain.com</span>. Mail Transport Agent Strict Transport Security is an advanced config rarely seen without dedicated security tooling. Almost never present on basic M365 tenants.<br><br>
+          <span class="wh">// WHAT DNS CANNOT PROVE</span><br><br>
+          DNS confirms <span class="wh">Exchange Online</span> is in use. It <span class="wn">cannot</span> confirm which Microsoft 365 license tier the org bought, or whether Defender for Office 365 is specifically enabled. Defender is a licensing decision made inside Microsoft's admin portal — it leaves no unique DNS record.<br><br>
+          <span class="wn">Third-party gateways:</span> If the org routes mail through Mimecast, Proofpoint, or another SEG before M365, the MX record points to that vendor — causing a false negative on check [1] even though M365 is used internally.<br><br>
+          <span class="wh">TO DEFINITIVELY CONFIRM DEFENDER:</span><br>
+          Use the <span class="wh">EMAIL HEADER ANALYSIS</span> tab. Paste headers from an email sent BY the target domain. The <span class="wh">X-MS-Exchange-AtpMessageProperties</span> header containing <span class="wh">SA</span> or <span class="wh">SL</span> is the only externally-visible proof of Defender being active.<br><br>
+          <span class="wn">// DNS = high confidence for M365</span><br>
+          <span class="wn">// Email headers = definitive for Defender</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CONTENT AREA ── -->
+    <div class="content-area">
+
+      <!-- ══ DNS RECON PANEL ══ -->
+      <div class="main-pane active" id="panel-dns">
+
+        <!-- Full-width input bar -->
+        <div class="dns-input-bar">
+          <div class="input-label">// TARGET — ENTER DOMAIN OR EMAIL ADDRESS</div>
+          <div class="prompt-wrap">
+            <div class="prompt-prefix">ROOT@DEFDET:~$ TARGET&gt;</div>
+            <input type="text" id="domainInput" placeholder="domain.com  or  user@domain.com" autocomplete="off" spellcheck="false" />
+            <button class="run-btn" id="runBtn" onclick="runDNS()">[ EXECUTE ]</button>
+          </div>
+          <div class="err-msg" id="dnsErrMsg"></div>
+        </div>
+
+        <!-- Left checks | Right results -->
+        <div class="dns-split">
+
+          <!-- LEFT: check rows -->
+          <div class="dns-checks">
+            <div class="section-divider">// SECTION 1 — EXCHANGE ONLINE</div>
+            <div class="check-row" id="card-mx">
+              <div class="row-head"><div class="row-num">[1]</div><div class="row-label">MX RECORD</div><div class="row-status s-wait" id="status-mx">░░░░ STANDBY</div></div>
+              <div class="row-detail" id="detail-mx">// mail exchanger — target: *.mail.protection.outlook.com</div>
+            </div>
+            <div class="check-row" id="card-spf">
+              <div class="row-head"><div class="row-num">[2]</div><div class="row-label">SPF TXT RECORD</div><div class="row-status s-wait" id="status-spf">░░░░ STANDBY</div></div>
+              <div class="row-detail" id="detail-spf">// sender policy — target: include:spf.protection.outlook.com</div>
+            </div>
+            <div class="check-row" id="card-dkim1">
+              <div class="row-head"><div class="row-num">[3]</div><div class="row-label">DKIM SELECTOR1 CNAME</div><div class="row-status s-wait" id="status-dkim1">░░░░ STANDBY</div></div>
+              <div class="row-detail" id="detail-dkim1">// m365 dkim key slot A — selector1-*._domainkey.*.onmicrosoft.com</div>
+            </div>
+            <div class="check-row" id="card-dkim2">
+              <div class="row-head"><div class="row-num">[4]</div><div class="row-label">DKIM SELECTOR2 CNAME</div><div class="row-status s-wait" id="status-dkim2">░░░░ STANDBY</div></div>
+              <div class="row-detail" id="detail-dkim2">// m365 dkim key slot B — selector2-*._domainkey.*.onmicrosoft.com</div>
+            </div>
+            <div class="section-divider">// SECTION 2 — DEFENDER INDICATORS</div>
+            <div class="check-row" id="card-dmarc">
+              <div class="row-head"><div class="row-num">[5]</div><div class="row-label">DMARC POLICY</div><div class="row-status s-wait" id="status-dmarc">░░░░ STANDBY</div></div>
+              <div class="row-detail" id="detail-dmarc">// p=reject/quarantine correlates with active defender deployment</div>
+            </div>
+            <div class="check-row" id="card-mta">
+              <div class="row-head"><div class="row-num">[6]</div><div class="row-label">MTA-STS POLICY</div><div class="row-status s-wait" id="status-mta">░░░░ STANDBY</div></div>
+              <div class="row-detail" id="detail-mta">// advanced mail transport security — rare without dedicated tooling</div>
+            </div>
+          </div>
+
+          <!-- RIGHT: results output -->
+          <div class="dns-results" id="dnsResultsPane">
+
+            <!-- Placeholder shown before first scan -->
+            <div id="resultsPlaceholder" class="results-placeholder">
+              <span class="ph-title">// AWAITING TARGET SCAN</span>
+              <span class="ph-item">Enter a domain or email address in the target field above and press <span style="color:var(--coral)">[ EXECUTE ]</span> to begin DNS reconnaissance.</span>
+              <br>
+              <span class="ph-item ph-bar">────────────────────────────────────────</span>
+              <br>
+              <span class="ph-item">Results for each check will appear here:</span>
+              <br>
+              <span class="ph-item"><span style="color:var(--text-dim)">[1] MX RECORD .............. waiting</span></span>
+              <span class="ph-item"><span style="color:var(--text-dim)">[2] SPF TXT RECORD ......... waiting</span></span>
+              <span class="ph-item"><span style="color:var(--text-dim)">[3] DKIM SELECTOR1 CNAME ... waiting</span></span>
+              <span class="ph-item"><span style="color:var(--text-dim)">[4] DKIM SELECTOR2 CNAME ... waiting</span></span>
+              <span class="ph-item"><span style="color:var(--text-dim)">[5] DMARC POLICY ........... waiting</span></span>
+              <span class="ph-item"><span style="color:var(--text-dim)">[6] MTA-STS POLICY ......... waiting</span></span>
+              <br>
+              <span class="ph-item ph-bar">────────────────────────────────────────</span>
+              <br>
+              <span class="ph-item" style="color:var(--text-dim)">// tip: use the WHY THIS WORKS tab in the left sidebar to understand what each check reveals</span>
+            </div>
+
+            <!-- Result blocks (hidden until scan) -->
+            <div id="resultsContent" style="display:none;">
+
+              <!-- 1. DNS Analysis verdict (top) -->
+              <div class="verdict-box" id="verdictBox" data-label="[ DNS ANALYSIS COMPLETE ]">
+                <div class="verdict-title" id="verdictTitle"></div>
+                <div class="score-bar" id="scoreBar"></div>
+                <div class="verdict-sub" id="verdictSub"></div>
+              </div>
+
+              <!-- 2. Gateway callout (shown when SEG detected) -->
+              <div class="gateway-callout" id="gatewayCallout">
+                <div class="gw-vendor" id="gwVendor"></div>
+                <div class="gw-body" id="gwBody"></div>
+              </div>
+
+              <!-- 3. Individual record results -->
+              <div class="section-divider" style="margin-top:12px; margin-bottom:8px;">// INDIVIDUAL RECORD RESULTS</div>
+              <div class="result-block" id="res-mx">
+                <div class="result-header">[1] MX RECORD</div>
+                <div class="result-value" id="resval-mx"></div>
+              </div>
+              <div class="result-block" id="res-spf">
+                <div class="result-header">[2] SPF TXT RECORD</div>
+                <div class="result-value" id="resval-spf"></div>
+              </div>
+              <div class="result-block" id="res-dkim1">
+                <div class="result-header">[3] DKIM SELECTOR1 CNAME</div>
+                <div class="result-value" id="resval-dkim1"></div>
+              </div>
+              <div class="result-block" id="res-dkim2">
+                <div class="result-header">[4] DKIM SELECTOR2 CNAME</div>
+                <div class="result-value" id="resval-dkim2"></div>
+              </div>
+              <div class="result-block" id="res-dmarc">
+                <div class="result-header">[5] DMARC POLICY</div>
+                <div class="result-value" id="resval-dmarc"></div>
+              </div>
+              <div class="result-block" id="res-mta">
+                <div class="result-header">[6] MTA-STS POLICY</div>
+                <div class="result-value" id="resval-mta"></div>
+              </div>
+
+            </div>
+
+          </div><!-- /dns-results -->
+        </div><!-- /dns-split -->
+      </div><!-- /panel-dns -->
+
+      <!-- ══ EMAIL HEADER PANEL ══ -->
+      <div class="main-pane" id="panel-hdr">
+        <div class="hdr-split">
+
+          <div class="hdr-left">
+            <div class="howto-box">
+              <div class="howto-tabs">
+                <div class="howto-tab active" onclick="showHowto('outlook')">OUTLOOK</div>
+                <div class="howto-tab" onclick="showHowto('gmail')">GMAIL</div>
+                <div class="howto-tab" onclick="showHowto('apple')">APPLE MAIL</div>
+                <div class="howto-tab" onclick="showHowto('why')">WHY THIS WORKS</div>
+              </div>
+              <div class="howto-content active" id="howto-outlook">
+                <span class="step">STEP 1:</span> Send an email TO the target domain (contact form, support address, or reply to their email).<br>
+                <span class="step">STEP 2:</span> Wait for their reply — you need a message that passed THROUGH their mail system.<br>
+                <span class="step">STEP 3:</span> In Outlook desktop: right-click message → <span class="step">View Source</span>, or File → Properties → Internet Headers.<br>
+                <span class="step">STEP 4:</span> Select all (Ctrl+A), copy, paste below.<br>
+                <span class="note">// OWA: open message → ··· menu → View → View message source</span>
+              </div>
+              <div class="howto-content" id="howto-gmail">
+                <span class="step">STEP 1:</span> Obtain an email FROM the target domain — a reply, newsletter, or notification.<br>
+                <span class="step">STEP 2:</span> In Gmail, click the <span class="step">⋮ three-dot menu</span> (top right of the message).<br>
+                <span class="step">STEP 3:</span> Select <span class="step">"Show original"</span> — opens a new tab with full raw source.<br>
+                <span class="step">STEP 4:</span> Copy all text and paste below.<br>
+                <span class="note">// Pasting the full source works fine — the tool only reads headers.</span>
+              </div>
+              <div class="howto-content" id="howto-apple">
+                <span class="step">STEP 1:</span> Obtain an email FROM the target domain in Apple Mail.<br>
+                <span class="step">STEP 2:</span> With message open: <span class="step">View → Message → All Headers</span> (Shift+Cmd+H).<br>
+                <span class="step">STEP 3:</span> Header block appears above the message body.<br>
+                <span class="step">STEP 4:</span> Select all header text, copy, paste below.<br>
+                <span class="note">// ALTERNATIVE: View → Message → Raw Source for full source.</span>
+              </div>
+              <div class="howto-content" id="howto-why">
+                <span class="step">WHY HEADERS REVEAL DEFENDER:</span><br>
+                When Defender for Office 365 processes a message, Microsoft injects specific headers ONLY present with an active Defender license:<br><br>
+                <span class="step">X-MS-Exchange-AtpMessageProperties</span><br>
+                Contains <span class="step">SA</span> (Safe Attachments) and/or <span class="step">SL</span> (Safe Links). This header is NEVER set by plain Exchange Online / EOP. It is the most definitive external Defender signal.<br><br>
+                <span class="step">UIMP in X-Forefront-Antispam-Report</span><br>
+                User Impersonation Protection field — exclusive to Defender for Office 365 anti-phishing policies.<br><br>
+                <span class="step">Safe Links URL wrapping</span><br>
+                URLs rewritten to <span class="step">*.safelinks.protection.outlook.com</span>. Only occurs when a Defender Safe Links policy is active on the recipient tenant.<br><br>
+                <span class="note">// Headers are stamped by the RECIPIENT's system — you need email FROM the target tenant.</span>
+              </div>
+            </div>
+            <div class="hdr-textarea-wrap">
+              <div class="hdr-textarea-label">ROOT@DEFDET:~$ PASTE RAW EMAIL HEADERS &gt;</div>
+              <textarea id="headerInput" placeholder="Paste full email headers or raw message source here...&#10;&#10;Look for lines like:&#10;Received: from ...&#10;X-Microsoft-Antispam: ...&#10;X-MS-Exchange-AtpMessageProperties: ...&#10;X-Forefront-Antispam-Report: ..."></textarea>
+            </div>
+            <button class="analyze-btn" onclick="analyzeHeaders()">[ ANALYZE HEADERS ]</button>
+          </div>
+
+          <div class="hdr-right">
+            <div class="section-divider" style="margin-top:0; margin-bottom:10px;">// HEADER ANALYSIS RESULTS</div>
+            <div class="check-row" id="hcard-atp">
+              <div class="row-head"><div class="row-num">[A]</div><div class="row-label blue-label">X-MS-EXCHANGE-ATPMESSAGEPROPERTIES</div><div class="row-status s-wait" id="hstatus-atp">░░░░ STANDBY</div></div>
+              <div class="row-detail" id="hdetail-atp">// DEFINITIVE — SA=Safe Attachments, SL=Safe Links. Only present when Defender ATP processed the message.</div>
+            </div>
+            <div class="check-row" id="hcard-uimp">
+              <div class="row-head"><div class="row-num">[B]</div><div class="row-label blue-label">UIMP IN X-FOREFRONT-ANTISPAM-REPORT</div><div class="row-status s-wait" id="hstatus-uimp">░░░░ STANDBY</div></div>
+              <div class="row-detail" id="hdetail-uimp">// DEFINITIVE — User Impersonation Protection. Exclusive to Defender for Office 365.</div>
+            </div>
+            <div class="check-row" id="hcard-safelinks">
+              <div class="row-head"><div class="row-num">[C]</div><div class="row-label blue-label">SAFE LINKS URL REWRITING</div><div class="row-status s-wait" id="hstatus-safelinks">░░░░ STANDBY</div></div>
+              <div class="row-detail" id="hdetail-safelinks">// DEFINITIVE — URLs wrapped in *.safelinks.protection.outlook.com. Requires active Defender Safe Links policy.</div>
+            </div>
+            <div class="check-row" id="hcard-eop">
+              <div class="row-head"><div class="row-num">[D]</div><div class="row-label blue-label">EOP PROCESSING HEADERS</div><div class="row-status s-wait" id="hstatus-eop">░░░░ STANDBY</div></div>
+              <div class="row-detail" id="hdetail-eop">// BASELINE — X-Forefront-Antispam-Report + X-Microsoft-Antispam. Confirms Exchange Online / EOP.</div>
+            </div>
+            <div class="check-row" id="hcard-region">
+              <div class="row-head"><div class="row-num">[E]</div><div class="row-label blue-label">M365 TENANT REGION</div><div class="row-status s-wait" id="hstatus-region">░░░░ STANDBY</div></div>
+              <div class="row-detail" id="hdetail-region">// INFO — Microsoft datacenter region inferred from Received headers and Safe Links prefix.</div>
+            </div>
+            <div class="verdict-box" id="hdrVerdictBox" data-label="[ HEADER ANALYSIS COMPLETE ]">
+              <div class="verdict-title" id="hdrVerdictTitle"></div>
+              <div class="score-bar" id="hdrScoreBar"></div>
+              <div class="verdict-sub" id="hdrVerdictSub"></div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /panel-hdr -->
+
+    </div><!-- /content-area -->
+  </div><!-- /body-split -->
+
+  <div class="footer-bar">
+    <span>// DNS: <span class="hi">CLOUDFLARE DOH (1.1.1.1)</span> | NO LOGGING</span>
+    <span>// DEFINITIVE DEFENDER SIGNAL: <span class="hi">X-MS-EXCHANGE-ATPMESSAGEPROPERTIES: SA|SL</span> | <span class="blink">_</span></span>
+  </div>
+
+</div><!-- /screen -->
+
+<script>
+// ── CLOCK ──
+function tick() {
+  document.getElementById('clockDisplay').textContent =
+    new Date().toISOString().replace('T',' ').slice(0,19) + ' UTC';
+}
+tick(); setInterval(tick, 1000);
+
+// ── BOOT LOG ──
+const log = document.getElementById('bootLog');
+const boot = [
+  { t: '> DEFDET v2.5 INITIALIZING...', c: 'ok', d: 0 },
+  { t: '> loading resolver engine............... <span class="ok">OK</span>', c: '', d: 140 },
+  { t: '> binding transport: cloudflare/1.1.1.1. <span class="ok">OK</span>', c: '', d: 280 },
+  { t: '> loading m365 mx fingerprints.......... <span class="ok">OK</span>', c: '', d: 420 },
+  { t: '> loading dmarc policy analyzer......... <span class="ok">OK</span>', c: '', d: 560 },
+  { t: '> loading mta-sts probe module.......... <span class="ok">OK</span>', c: '', d: 700 },
+  { t: '> loading atp header signatures......... <span class="ok">OK</span>', c: '', d: 840 },
+  { t: '> loading safe-links url detector....... <span class="ok">OK</span>', c: '', d: 980 },
+  { t: '> all modules nominal.', c: 'ok', d: 1100 },
+  { t: '> <span class="dim2">────────────────────────────────</span>', c: '', d: 1180 },
+  { t: '> READY.', c: 'ok', d: 1260 },
+];
+boot.forEach(({t,c,d}) => setTimeout(() => {
+  const el = document.createElement('div');
+  if (c) el.className = c;
+  el.innerHTML = t;
+  log.appendChild(el);
+  log.scrollTop = log.scrollHeight;
+}, d));
+
+function appendLog(html, cls) {
+  const el = document.createElement('div');
+  if (cls) el.className = cls;
+  el.innerHTML = '> ' + html;
+  log.appendChild(el);
+  log.scrollTop = log.scrollHeight;
+}
+
+// ── MAIN TABS ──
+function switchTab(t) {
+  document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.main-pane').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + t).classList.add('active');
+  document.getElementById('panel-' + t).classList.add('active');
+}
+
+// ── SIDEBAR TABS ──
+function switchSidebar(id) {
+  document.querySelectorAll('.sidebar-tab').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.sidebar-panel').forEach(el => el.classList.remove('active'));
+  document.getElementById('stab-' + id).classList.add('active');
+  document.getElementById('spanel-' + id).classList.add('active');
+}
+
+// ── HOWTO TABS ──
+function showHowto(id) {
+  const box = event.target.closest('.howto-box');
+  box.querySelectorAll('.howto-tab').forEach(el => el.classList.remove('active'));
+  box.querySelectorAll('.howto-content').forEach(el => el.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('howto-' + id).classList.add('active');
+}
+
+// ── DNS ──
+const DOH = 'https://cloudflare-dns.com/dns-query';
+async function dnsQuery(name, type) {
+  const r = await fetch(`${DOH}?name=${encodeURIComponent(name)}&type=${type}`,
+    { headers: { 'Accept': 'application/dns-json' } });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
+
+function setCard(id, state, statusHtml, detailHtml) {
+  const card   = document.getElementById('card-' + id);
+  const status = document.getElementById('status-' + id);
+  const detail = document.getElementById('detail-' + id);
+  card.className = 'check-row' + (state ? ' ' + state : '');
+  const cls = {pass:'s-pass',fail:'s-fail',warn:'s-warn',running:'s-run pulse',info:'s-info'}[state] || 's-wait';
+  status.className = 'row-status ' + cls;
+  status.innerHTML = statusHtml;
+  if (detailHtml !== null) detail.innerHTML = detailHtml;
+}
+function setRunning(id) { setCard(id, 'running', '▶▶▶▶ QUERYING...', null); }
+
+function setResult(id, html) {
+  document.getElementById('resval-' + id).innerHTML = html;
+}
+
+function extractDomain(v) {
+  v = v.trim().toLowerCase();
+  if (v.includes('@')) v = v.split('@')[1];
+  return v.replace(/^https?:\/\//,'').replace(/^www\./,'').split('/')[0];
+}
+
+function scoreBar(n, t, useBlue) {
+  let s = 'SIGNAL STRENGTH: [';
+  const cls = useBlue ? 'sf2' : 'sf';
+  for (let i=0;i<t;i++) s += `<span class="${i<n?cls:'se'}">█</span>`;
+  return s + `] ${n}/${t}`;
+}
+
+// ── SECURITY GATEWAY DATABASE ──
+const GATEWAYS = [
+  {
+    name: 'PROOFPOINT',
+    patterns: ['pphosted.com','proofpoint.com','ppe-hosted.com'],
+    spfPatterns: ['pphosted.com','proofpoint.com'],
+    desc: 'Proofpoint Enterprise/Essentials',
+    impact: 'Proofpoint is a Secure Email Gateway (SEG) sitting in front of the mail server. All inbound and outbound mail routes through Proofpoint infrastructure — the actual backend (Exchange, Gmail, on-prem) is hidden behind it.',
+    note: 'M365 may still be present internally but undetectable via MX. Check SPF record for <span class="gw-hi">spf.protection.outlook.com</span> as a secondary signal. Email headers from received mail will still reveal if M365/Defender is the backend.'
+  },
+  {
+    name: 'MIMECAST',
+    patterns: ['mimecast.com'],
+    spfPatterns: ['mimecast.com'],
+    desc: 'Mimecast Secure Email Gateway',
+    impact: 'Mimecast is a cloud SEG that proxies all mail in front of Exchange Online or on-premises Exchange. The MX record points to Mimecast — Microsoft infrastructure is not visible externally.',
+    note: 'Many Mimecast deployments DO use M365 + Defender as the backend. Check SPF for <span class="gw-hi">spf.protection.outlook.com</span>. Headers from received mail will show the full chain including Defender ATP headers if present.'
+  },
+  {
+    name: 'BARRACUDA',
+    patterns: ['barracudanetworks.com','cudamail.com','bbarracuda.com'],
+    spfPatterns: ['barracudanetworks.com'],
+    desc: 'Barracuda Email Security Gateway',
+    impact: 'Barracuda ESG is routing all mail and masking the backend mail server from external DNS inspection.',
+    note: 'Backend may be M365 or on-premises Exchange. SPF and email headers are the only remaining external signals.'
+  },
+  {
+    name: 'CISCO / IRONPORT',
+    patterns: ['iphmx.com','ironport.com','cisco.com'],
+    spfPatterns: ['iphmx.com','ironport.com'],
+    desc: 'Cisco IronPort / Cisco Secure Email',
+    impact: 'Cisco IronPort is acting as the inbound mail gateway. The underlying mail platform is obscured from DNS.',
+    note: 'Common in large enterprises and financial institutions. Backend is often on-premises Exchange or Microsoft 365. SPF record may reveal M365 even if MX does not.'
+  },
+  {
+    name: 'FORTIMAIL',
+    patterns: ['fortimail.com','fortinet.com'],
+    spfPatterns: ['fortimail.com'],
+    desc: 'Fortinet FortiMail',
+    impact: 'FortiMail is a Fortinet email security appliance proxying inbound mail. The backend mail server is not externally visible.',
+    note: 'Typically deployed on-premises. May protect Exchange Online or on-premises Exchange. Email headers will still contain Defender signals if M365 is the backend.'
+  },
+  {
+    name: 'SOPHOS',
+    patterns: ['sophos.com','reflexion.net'],
+    spfPatterns: ['sophos.com','reflexion.net'],
+    desc: 'Sophos Email / Reflexion',
+    impact: 'Sophos Email Gateway is handling mail routing. Backend mail platform not identifiable from MX alone.',
+    note: 'Check SPF record for secondary M365 signals.'
+  },
+  {
+    name: 'GOOGLE WORKSPACE',
+    patterns: ['google.com','googlemail.com','aspmx.l.google.com','smtp.google.com'],
+    spfPatterns: ['_spf.google.com','google.com'],
+    desc: 'Google Workspace (Gmail)',
+    impact: 'This domain uses Google Workspace for email — not Microsoft 365. Defender for Office 365 is a Microsoft product and will not be present.',
+    note: 'Google has its own security stack (Google Workspace Protect, third-party integrations). Defender detection is not applicable here.'
+  },
+  {
+    name: 'MESSAGELABS / SYMANTEC',
+    patterns: ['messagelabs.com','symanteccloud.com'],
+    spfPatterns: ['messagelabs.com','symanteccloud.com'],
+    desc: 'Broadcom / Symantec MessageLabs',
+    impact: 'MessageLabs/Symantec Cloud Email Security is acting as the mail gateway. Backend mail server is not externally visible.',
+    note: 'Legacy enterprise SEG. May front Exchange Online or on-prem Exchange. Email headers required for further detection.'
+  },
+  {
+    name: 'ABNORMAL SECURITY',
+    patterns: ['abnormalsecurity.com'],
+    spfPatterns: ['abnormalsecurity.com'],
+    desc: 'Abnormal Security',
+    impact: 'Abnormal Security is an API-based email security product. Unlike traditional SEGs, it integrates directly with M365 without changing MX records — M365 DNS signals should still be detectable.',
+    note: 'This is actually a <span class="gw-hi">positive indicator</span> — Abnormal Security is commonly deployed alongside Defender for Office 365 as a complementary layer.'
+  },
+  {
+    name: 'TREND MICRO',
+    patterns: ['trendmicro.com','imhs.trendmicro.com'],
+    spfPatterns: ['trendmicro.com'],
+    desc: 'Trend Micro Email Security',
+    impact: 'Trend Micro is acting as the inbound mail gateway, masking the backend platform.',
+    note: 'May sit in front of Exchange Online. Check SPF for M365 includes.'
+  },
+];
+
+function detectGateway(mxRecords, spfRecord) {
+  const mxStr = mxRecords.join(' ').toLowerCase();
+  const spfStr = (spfRecord||'').toLowerCase();
+  for (const gw of GATEWAYS) {
+    const mxHit = gw.patterns.some(p => mxStr.includes(p));
+    const spfHit = gw.spfPatterns.some(p => spfStr.includes(p));
+    if (mxHit || (!mxHit && spfHit)) return { gw, viaMx: mxHit, viaSpf: spfHit };
+  }
+  return null;
+}
+
+function showGatewayCallout(detection, domain) {
+  const { gw, viaMx, viaSpf } = detection;
+  const el = document.getElementById('gatewayCallout');
+  document.getElementById('gwVendor').textContent = `⚠ ${gw.name} DETECTED`;
+  document.getElementById('gwBody').innerHTML =
+    `<span class="gw-hi">${gw.desc}</span> detected via ${viaMx ? 'MX record' : 'SPF record'}.<br><br>` +
+    `<span class="gw-hi">IMPACT ON DETECTION:</span> ${gw.impact}<br><br>` +
+    `<span class="gw-hi">WHAT TO DO:</span> ${gw.note}`;
+  el.className = 'gateway-callout show';
+  appendLog(`gateway: <span class="warn">⚠ ${gw.name} DETECTED — MAY MASK M365/DEFENDER</span>`);
+}
+
+function hideGatewayCallout() {
+  document.getElementById('gatewayCallout').className = 'gateway-callout';
+}
+
+async function runDNS() {
+  const raw = document.getElementById('domainInput').value;
+  const domain = extractDomain(raw);
+  const errEl = document.getElementById('dnsErrMsg');
+  errEl.style.display = 'none';
+
+  if (!domain || !domain.includes('.')) {
+    errEl.innerHTML = '// ERROR: invalid target — enter domain or email';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  const btn = document.getElementById('runBtn');
+  btn.disabled = true; btn.textContent = '[ SCANNING ]';
+
+  // Show results pane, hide placeholder
+  document.getElementById('resultsPlaceholder').style.display = 'none';
+  document.getElementById('resultsContent').style.display = 'block';
+  document.getElementById('verdictBox').className = 'verdict-box';
+  hideGatewayCallout();
+
+  ['mx','spf','dkim1','dkim2','dmarc','mta'].forEach(id => {
+    setCard(id, '', '░░░░ STANDBY', null);
+    setResult(id, '<span style="color:var(--text-dim)">// querying...</span>');
+  });
+
+  appendLog(`dns recon on target: <span class="ok">${domain}</span>`);
+  const R = { mx:false, spf:false, dkim1:false, dkim2:false, dmarc:0, mta:false };
+  let mxRecords = [];
+  let spfRecord = null;
+
+  // ── MX ──
+  setRunning('mx');
+  try {
+    const d = await dnsQuery(domain, 'MX');
+    const mx = (d.Answer||[]).filter(a=>a.type===15).map(a=>a.data);
+    mxRecords = mx;
+    const hit = mx.some(r=>r.toLowerCase().includes('mail.protection.outlook.com'));
+    if (!mx.length) {
+      setCard('mx','fail','✖ NOT FOUND','// no MX records found for this domain');
+      setResult('mx', '<span class="re">✖ no MX records found</span>');
+      appendLog('mx: <span class="err">NO RECORD</span>');
+    } else if (hit) {
+      R.mx = true;
+      setCard('mx','pass','✔ CONFIRMED',`// exchange online verified<span class="val">${mx.join('<br>')}</span>`);
+      setResult('mx', '<span class="rg">✔ Exchange Online confirmed</span>');
+      appendLog('mx: <span class="ok">EXCHANGE ONLINE CONFIRMED</span>');
+    } else {
+      setCard('mx','warn','⚠ NOT M365',`// non-microsoft mx detected<span class="val">${mx.join('<br>')}</span>`);
+      setResult('mx', '<span class="rw">⚠ MX found — not pointing to Microsoft 365</span>');
+      appendLog('mx: <span class="warn">NON-M365 MX</span>');
+    }
+  } catch(e) {
+    setCard('mx','fail','✖ ERROR',`// ${e.message}`);
+    setResult('mx', `<span class="re">✖ query error</span>`);
+    appendLog(`mx: <span class="err">ERROR</span>`);
+  }
+
+  // ── SPF ──
+  setRunning('spf');
+  try {
+    const d = await dnsQuery(domain, 'TXT');
+    const txts = (d.Answer||[]).filter(a=>a.type===16).map(a=>a.data.replace(/"/g,''));
+    const spf = txts.find(r=>r.startsWith('v=spf1'));
+    spfRecord = spf || null;
+    // ── GATEWAY DETECTION (runs after both MX + SPF are known) ──
+    const gwDetection = detectGateway(mxRecords, spfRecord);
+    if (gwDetection) showGatewayCallout(gwDetection, domain);
+    const pats = ['spf.protection.outlook.com','_spf-a.microsoft.com','_spf-b.microsoft.com','_spf-c.microsoft.com','protection.outlook.com'];
+    const hit = spf && pats.some(p=>spf.includes(p));
+    if (!spf) {
+      setCard('spf','fail','✖ NOT FOUND','// no SPF TXT record found');
+      setResult('spf', '<span class="re">✖ no SPF record found</span>');
+      appendLog('spf: <span class="err">NO RECORD</span>');
+    } else if (hit) {
+      R.spf = true;
+      setCard('spf','pass','✔ CONFIRMED',`// m365 spf include verified<span class="val">${spf}</span>`);
+      setResult('spf', '<span class="rg">✔ Microsoft 365 SPF confirmed</span>');
+      appendLog('spf: <span class="ok">M365 SPF CONFIRMED</span>');
+    } else {
+      setCard('spf','warn','⚠ NOT M365',`// non-m365 spf found<span class="val">${spf}</span>`);
+      setResult('spf', '<span class="rw">⚠ SPF found — no M365 include detected</span>');
+      appendLog('spf: <span class="warn">NON-M365 SPF</span>');
+    }
+  } catch(e) {
+    setCard('spf','fail','✖ ERROR',`// ${e.message}`);
+    setResult('spf', `<span class="re">✖ query error</span>`);
+  }
+
+  // ── DKIM1 ──
+  setRunning('dkim1');
+  try {
+    const name = `selector1._domainkey.${domain}`;
+    const d = await dnsQuery(name, 'CNAME');
+    const cn = (d.Answer||[]).find(a=>a.type===5);
+    if (!cn) {
+      setCard('dkim1','fail','✖ NOT FOUND',`// no CNAME at ${name} — DKIM not configured`);
+      setResult('dkim1', '<span class="re">✖ no CNAME — DKIM not configured</span>');
+      appendLog('dkim sel1: <span class="err">NO CNAME</span>');
+    } else if (cn.data.includes('onmicrosoft.com')) {
+      R.dkim1 = true;
+      setCard('dkim1','pass','✔ CONFIRMED',`// m365 dkim signing active<span class="val">${cn.data}</span>`);
+      setResult('dkim1', '<span class="rg">✔ M365 DKIM signing active</span>');
+      appendLog('dkim sel1: <span class="ok">M365 DKIM ACTIVE</span>');
+    } else {
+      setCard('dkim1','warn','⚠ NOT M365',`// non-m365 cname found<span class="val">${cn.data}</span>`);
+      setResult('dkim1', '<span class="rw">⚠ CNAME found — not an M365 endpoint</span>');
+      appendLog('dkim sel1: <span class="warn">NON-M365 CNAME</span>');
+    }
+  } catch(e) {
+    setCard('dkim1','fail','✖ ERROR',`// ${e.message}`);
+    setResult('dkim1', `<span class="re">✖ query error</span>`);
+  }
+
+  // ── DKIM2 ──
+  setRunning('dkim2');
+  try {
+    const name = `selector2._domainkey.${domain}`;
+    const d = await dnsQuery(name, 'CNAME');
+    const cn = (d.Answer||[]).find(a=>a.type===5);
+    if (!cn) {
+      setCard('dkim2','fail','✖ NOT FOUND',`// no CNAME at ${name} — DKIM not configured`);
+      setResult('dkim2', '<span class="re">✖ no CNAME — DKIM not configured</span>');
+      appendLog('dkim sel2: <span class="err">NO CNAME</span>');
+    } else if (cn.data.includes('onmicrosoft.com')) {
+      R.dkim2 = true;
+      setCard('dkim2','pass','✔ CONFIRMED',`// m365 dkim signing active<span class="val">${cn.data}</span>`);
+      setResult('dkim2', '<span class="rg">✔ M365 DKIM signing active</span>');
+      appendLog('dkim sel2: <span class="ok">M365 DKIM ACTIVE</span>');
+    } else {
+      setCard('dkim2','warn','⚠ NOT M365',`// non-m365 cname found<span class="val">${cn.data}</span>`);
+      setResult('dkim2', '<span class="rw">⚠ CNAME found — not an M365 endpoint</span>');
+      appendLog('dkim sel2: <span class="warn">NON-M365 CNAME</span>');
+    }
+  } catch(e) {
+    setCard('dkim2','fail','✖ ERROR',`// ${e.message}`);
+    setResult('dkim2', `<span class="re">✖ query error</span>`);
+  }
+
+  // ── DMARC ──
+  setRunning('dmarc');
+  try {
+    const d = await dnsQuery(`_dmarc.${domain}`, 'TXT');
+    const txts = (d.Answer||[]).filter(a=>a.type===16).map(a=>a.data.replace(/"/g,''));
+    const rec = txts.find(r=>r.startsWith('v=DMARC1'));
+    if (!rec) {
+      setCard('dmarc','fail','✖ NOT FOUND','// no DMARC record — low security posture');
+      setResult('dmarc', '<span class="re">✖ no DMARC record</span>');
+      appendLog('dmarc: <span class="err">NO RECORD</span>');
+    } else {
+      const pol = (rec.match(/p=([^;]+)/)||[])[1]||'none';
+      if (pol === 'reject') {
+        R.dmarc = 3;
+        setCard('dmarc','pass','✔ p=REJECT',`// strong policy — high defender correlation<span class="val">${rec}</span>`);
+        setResult('dmarc', '<span class="rg">✔ p=reject — strong enforcement policy</span>');
+        appendLog('dmarc: <span class="ok">p=REJECT — STRONG POSTURE</span>');
+      } else if (pol === 'quarantine') {
+        R.dmarc = 2;
+        setCard('dmarc','warn','⚠ p=QUARANTINE',`// moderate policy<span class="val">${rec}</span>`);
+        setResult('dmarc', '<span class="rw">⚠ p=quarantine — moderate enforcement</span>');
+        appendLog('dmarc: <span class="warn">p=QUARANTINE</span>');
+      } else {
+        R.dmarc = 1;
+        setCard('dmarc','fail','✖ p=NONE',`// monitoring only — no enforcement<span class="val">${rec}</span>`);
+        setResult('dmarc', '<span class="re">✖ p=none — monitoring only</span>');
+        appendLog('dmarc: <span class="warn">p=NONE — MONITORING ONLY</span>');
+      }
+    }
+  } catch(e) {
+    setCard('dmarc','fail','✖ ERROR',`// ${e.message}`);
+    setResult('dmarc', `<span class="re">✖ query error</span>`);
+  }
+
+  // ── MTA-STS ──
+  setRunning('mta');
+  try {
+    const d = await dnsQuery(`_mta-sts.${domain}`, 'TXT');
+    const txts = (d.Answer||[]).filter(a=>a.type===16).map(a=>a.data.replace(/"/g,''));
+    const rec = txts.find(r=>r.startsWith('v=STSv1'));
+    if (!rec) {
+      setCard('mta','fail','✖ NOT FOUND','// no MTA-STS record — not configured');
+      setResult('mta', '<span class="re">✖ MTA-STS not configured</span>');
+      appendLog('mta-sts: <span class="err">NOT CONFIGURED</span>');
+    } else {
+      R.mta = true;
+      setCard('mta','pass','✔ CONFIGURED',`// advanced mail security active<span class="val">${rec}</span>`);
+      setResult('mta', '<span class="rg">✔ MTA-STS active</span>');
+      appendLog('mta-sts: <span class="ok">CONFIGURED</span>');
+    }
+  } catch(e) {
+    setCard('mta','fail','✖ ERROR',`// ${e.message}`);
+    setResult('mta', `<span class="re">✖ query error</span>`);
+  }
+
+  // ── VERDICT ──
+  const m365score = [R.mx, R.spf, R.dkim1, R.dkim2].filter(Boolean).length;
+  const defScore  = (R.dmarc >= 2 ? 1 : 0) + (R.mta ? 1 : 0);
+  const vb = document.getElementById('verdictBox');
+  document.getElementById('scoreBar').innerHTML =
+    scoreBar(m365score, 4, false) +
+    `&nbsp;&nbsp;<span style="color:var(--text-2)">|</span>&nbsp;&nbsp;<span style="color:var(--text-2)">DEFENDER INDICATORS:</span> [` +
+    `<span class="${defScore>0?'sf':'se'}">█</span><span class="${defScore>1?'sf':'se'}">█</span>] ${defScore}/2`;
+
+  if (m365score === 4 && defScore === 2) {
+    vb.className = 'verdict-box show confirmed';
+    document.getElementById('verdictTitle').textContent = '>> M365 CONFIRMED + DEFENDER LIKELY';
+    document.getElementById('verdictSub').innerHTML = `// all 4 m365 signals positive + both defender indicators present<br>// <span class="hi">exchange online confirmed.</span> dmarc enforcement + mta-sts active<br>// <span class="hiA">use email header analysis tab to definitively confirm defender</span><br>// confidence (m365): ████████████ HIGH | confidence (defender): ████████░░░░ LIKELY`;
+    appendLog(`<span class="ok">VERDICT: M365 CONFIRMED + DEFENDER LIKELY [${m365score}/4 + ${defScore}/2]</span>`);
+  } else if (m365score === 4 && defScore === 1) {
+    vb.className = 'verdict-box show confirmed';
+    document.getElementById('verdictTitle').textContent = '>> M365 CONFIRMED / DEFENDER POSSIBLE';
+    document.getElementById('verdictSub').innerHTML = `// all 4 m365 signals positive. one defender indicator detected<br>// <span class="hiA">use email header analysis tab to confirm defender</span><br>// confidence (m365): ████████████ HIGH | confidence (defender): ████░░░░░░░░ POSSIBLE`;
+    appendLog(`<span class="ok">VERDICT: M365 CONFIRMED [${m365score}/4]</span>`);
+  } else if (m365score === 4) {
+    vb.className = 'verdict-box show confirmed';
+    document.getElementById('verdictTitle').textContent = '>> M365 EXCHANGE ONLINE CONFIRMED';
+    document.getElementById('verdictSub').innerHTML = `// all 4 m365 signals positive — exchange online with dkim signing<br>// <span class="hiA">no defender-correlated dns signals detected</span><br>// <span class="hiA">use email header analysis tab for definitive defender check</span><br>// confidence (m365): ████████████ HIGH | confidence (defender): ░░░░░░░░░░░░ UNVERIFIABLE`;
+    appendLog(`<span class="ok">VERDICT: M365 EXCHANGE ONLINE CONFIRMED [${m365score}/4]</span>`);
+  } else if (m365score >= 2) {
+    vb.className = 'verdict-box show partial';
+    document.getElementById('verdictTitle').textContent = '>> PARTIAL MATCH — LIKELY M365';
+    document.getElementById('verdictSub').innerHTML = `// ${m365score}/4 m365 signals detected<br>// confidence: ████████░░░░ MEDIUM`;
+    appendLog(`<span class="warn">VERDICT: LIKELY M365 [${m365score}/4]</span>`);
+  } else {
+    vb.className = 'verdict-box show negative';
+    document.getElementById('verdictTitle').textContent = '>> NOT M365 / NOT EXCHANGE ONLINE';
+    document.getElementById('verdictSub').innerHTML = `// 0-1/4 microsoft 365 signals for ${domain}<br>// confidence: ████████████ HIGH (not m365)`;
+    appendLog(`<span class="err">VERDICT: NOT M365 [${m365score}/4]</span>`);
+  }
+
+  appendLog('dns recon complete. <span class="blink">_</span>');
+  btn.disabled = false; btn.textContent = '[ EXECUTE ]';
+}
+
+// ── HEADER ANALYSIS ──
+function setHCard(id, state, statusHtml, detailHtml) {
+  const card   = document.getElementById('hcard-' + id);
+  const status = document.getElementById('hstatus-' + id);
+  const detail = document.getElementById('hdetail-' + id);
+  card.className = 'check-row' + (state ? ' ' + state : '');
+  const cls = {pass:'s-pass',fail:'s-fail',warn:'s-warn',info:'s-info'}[state] || 's-wait';
+  status.className = 'row-status ' + cls;
+  status.innerHTML = statusHtml;
+  if (detailHtml !== null) detail.innerHTML = detailHtml;
+}
+
+function analyzeHeaders() {
+  const raw = document.getElementById('headerInput').value;
+  if (!raw.trim()) { appendLog('header analysis: <span class="err">NO INPUT</span>'); return; }
+  appendLog('analyzing email headers...', 'info');
+  ['atp','uimp','safelinks','eop','region'].forEach(id => setHCard(id,'','░░░░ ANALYZING',null));
+  document.getElementById('hdrVerdictBox').className = 'verdict-box';
+  const H = { atp:false, uimp:false, safelinks:false, eop:false };
+
+  // [A] ATP
+  const atpMatch = raw.match(/X-MS-Exchange-AtpMessageProperties\s*:\s*([^\r\n]+)/i);
+  if (atpMatch) {
+    const val = atpMatch[1].trim();
+    const hasSA = val.includes('SA'), hasSL = val.includes('SL');
+    H.atp = true;
+    const flags = [hasSA?'SA (Safe Attachments)':'', hasSL?'SL (Safe Links)':''].filter(Boolean).join(' + ');
+    setHCard('atp','pass','✔ DEFENDER CONFIRMED',`// ATP properties detected: <span style="color:var(--blue)">${flags}</span><span class="val-blue">${val}</span>`);
+    appendLog(`atp: <span class="ok">DEFENDER ATP CONFIRMED — ${flags}</span>`);
+  } else {
+    setHCard('atp','fail','✖ NOT PRESENT','// header absent — Defender ATP did not process this message');
+    appendLog('atp: <span class="err">NOT FOUND</span>');
+  }
+
+  // [B] UIMP
+  const ffMatch = raw.match(/X-Forefront-Antispam-Report\s*:\s*([^\r\n]+(?:\r?\n[ \t]+[^\r\n]+)*)/i);
+  if (ffMatch) {
+    const val = ffMatch[1].replace(/\s+/g,' ').trim();
+    if (/\bUIMP\b/i.test(val)) {
+      H.uimp = true;
+      setHCard('uimp','pass','✔ DEFENDER CONFIRMED',`// UIMP field present — User Impersonation Protection active<span class="val-blue">${val.substring(0,200)}${val.length>200?'...':''}</span>`);
+      appendLog('uimp: <span class="ok">USER IMPERSONATION PROTECTION ACTIVE</span>');
+    } else {
+      setHCard('uimp','warn','⚠ NOT FOUND',`// X-Forefront header present but no UIMP field<span class="val-blue">${val.substring(0,200)}${val.length>200?'...':''}</span>`);
+      appendLog('uimp: <span class="warn">FOREFRONT PRESENT — NO UIMP</span>');
+    }
+  } else {
+    setHCard('uimp','fail','✖ NOT PRESENT','// X-Forefront-Antispam-Report absent — not Exchange Online');
+    appendLog('uimp: <span class="err">NO FOREFRONT HEADER</span>');
+  }
+
+  // [C] Safe Links
+  const slMatch = raw.match(/https?:\/\/([a-z0-9]{2,6}\d{0,2})\.safelinks\.protection\.outlook\.com/i);
+  if (slMatch) {
+    H.safelinks = true;
+    const prefix = slMatch[1];
+    const regions = { nam:'North America', eur:'Europe', apc:'Asia Pacific', can:'Canada', aus:'Australia', ind:'India' };
+    const regionName = regions[prefix.replace(/\d+/g,'').toLowerCase()] || 'Unknown';
+    setHCard('safelinks','pass','✔ DEFENDER CONFIRMED',`// Safe Links URL rewriting detected — Safe Links policy active<span class="val-blue">prefix: ${prefix} → region: ${regionName}</span>`);
+    appendLog(`safelinks: <span class="ok">SAFE LINKS ACTIVE — ${regionName} (${prefix})</span>`);
+  } else {
+    setHCard('safelinks','warn','⚠ NOT DETECTED','// No Safe Links wrapped URLs found — Safe Links may be disabled or API-only mode');
+    appendLog('safelinks: <span class="warn">NO URL REWRITING DETECTED</span>');
+  }
+
+  // [D] EOP
+  const hasForefront = /X-Forefront-Antispam-Report/i.test(raw);
+  const hasMSAntispam = /X-Microsoft-Antispam/i.test(raw);
+  if (hasForefront && hasMSAntispam) {
+    H.eop = true;
+    setHCard('eop','pass','✔ EOP CONFIRMED','// X-Forefront + X-Microsoft-Antispam present — Exchange Online Protection confirmed');
+    appendLog('eop: <span class="ok">EXCHANGE ONLINE PROTECTION CONFIRMED</span>');
+  } else if (/X-MS-Exchange/i.test(raw)) {
+    setHCard('eop','warn','⚠ PARTIAL','// Some X-MS-Exchange headers present but full EOP headers absent');
+    appendLog('eop: <span class="warn">PARTIAL EXCHANGE HEADERS</span>');
+  } else {
+    setHCard('eop','fail','✖ NOT FOUND','// No Exchange Online headers detected');
+    appendLog('eop: <span class="err">NOT EXCHANGE ONLINE</span>');
+  }
+
+  // [E] Region
+  let regionInfo = 'unable to determine region';
+  if (slMatch) {
+    const p = slMatch[1].toLowerCase();
+    const rm = { nam:'North America', eur:'Europe', apc:'Asia Pacific', can:'Canada', aus:'Australia', ind:'India' };
+    const rn = rm[p.replace(/\d+/g,'')];
+    if (rn) regionInfo = `${rn} (inferred from Safe Links prefix: ${p})`;
+  } else {
+    const rcvd = raw.match(/Received:.*?(?=\nReceived:|\n[^ \t]|$)/gis)||[];
+    const msRcvd = rcvd.find(l=>/microsoft\.com|outlook\.com|protection\.outlook/i.test(l));
+    if (msRcvd) { const dc = msRcvd.match(/([A-Z]{2,3}\d+[A-Z]*\d*)\b/); if (dc) regionInfo = `datacenter identifier: ${dc[1]}`; }
+  }
+  setHCard('region','info','◈ INFO',`// ${regionInfo}`);
+  appendLog(`region: <span class="info">${regionInfo}</span>`);
+
+  // verdict
+  const defSignals = [H.atp, H.uimp, H.safelinks].filter(Boolean).length;
+  const hv = document.getElementById('hdrVerdictBox');
+  document.getElementById('hdrScoreBar').innerHTML = scoreBar(defSignals, 3, true);
+  if (defSignals >= 2) {
+    hv.className = 'verdict-box show defender';
+    document.getElementById('hdrVerdictTitle').textContent = '>> DEFENDER FOR OFFICE 365 CONFIRMED';
+    document.getElementById('hdrVerdictSub').innerHTML = `// <span class="hiB">${defSignals}/3 definitive defender signals detected</span><br>${H.atp?'// ✔ ATP: safe attachments/links processing confirmed<br>':''}${H.uimp?'// ✔ user impersonation protection active (defender-only)<br>':''}${H.safelinks?'// ✔ safe links url rewriting active<br>':''}// confidence: ████████████ HIGH`;
+    appendLog(`<span class="ok">HEADER VERDICT: DEFENDER CONFIRMED [${defSignals}/3]</span>`);
+  } else if (defSignals === 1) {
+    hv.className = 'verdict-box show partial';
+    document.getElementById('hdrVerdictTitle').textContent = '>> DEFENDER LIKELY';
+    document.getElementById('hdrVerdictSub').innerHTML = `// 1/3 definitive signals — likely active, policy may limit some signals<br>// confidence: ████████░░░░ LIKELY`;
+    appendLog(`<span class="warn">HEADER VERDICT: DEFENDER LIKELY [1/3]</span>`);
+  } else if (H.eop) {
+    hv.className = 'verdict-box show partial';
+    document.getElementById('hdrVerdictTitle').textContent = '>> EXCHANGE ONLINE / EOP ONLY';
+    document.getElementById('hdrVerdictSub').innerHTML = `// EOP confirmed but no defender-specific signals detected<br>// <span class="hiA">safe links may be set to api-only mode (no url rewriting)</span><br>// confidence: ████████████ HIGH (no defender)`;
+    appendLog(`<span class="warn">HEADER VERDICT: EOP ONLY</span>`);
+  } else {
+    hv.className = 'verdict-box show negative';
+    document.getElementById('hdrVerdictTitle').textContent = '>> NOT EXCHANGE ONLINE';
+    document.getElementById('hdrVerdictSub').innerHTML = `// no microsoft 365 or defender signals in these headers`;
+    appendLog(`<span class="err">HEADER VERDICT: NOT EXCHANGE ONLINE</span>`);
+  }
+}
+
+document.getElementById('domainInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') runDNS();
+});
+</script>
+</body>
+</html>
