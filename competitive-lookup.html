@@ -200,11 +200,11 @@
       <div class="page-title">Security Landscape Reference</div>
       <div class="page-subtitle">Tools, competitive positioning, and acronym glossary — for use on live calls.</div>
     </div>
-    <span class="count-pill" id="countBadge">40 tools</span>
+    <span class="count-pill" id="countBadge">45 tools</span>
   </div>
 
   <div class="tab-bar">
-    <button class="tab-btn active" onclick="showTab('tools',this)">Tools (40)</button>
+    <button class="tab-btn active" onclick="showTab('tools',this)">Tools (45)</button>
     <button class="tab-btn" onclick="showTab('glossary',this)">Acronym Glossary</button>
   </div>
 
@@ -236,6 +236,19 @@
     </div>
 
     <div class="grid" id="grid">
+
+      <!-- AD MINER -->
+      <div class="card" data-cat="ispm" data-rel="direct" data-name="ad miner adminer" data-tags="attack path graph bloodhound neo4j active directory free french anssi">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-direct"></span><span class="comp-name">AD Miner</span><span class="cat-tag">Attack Path Graph</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-direct">Direct competitor</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Free, French-rooted reporting built on BloodHound / Neo4j data — community attack-path reports for Active Directory. Manual, point-in-time.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"AD Miner produces useful attack-path reports off BloodHound/Neo4j data, but it's a free, manual reporting layer. Saporo is a supported platform with native collection, chokepoint prioritization, scheduled re-evaluation, and ANSSI/CIS alignment — findings you can operationalize, not just read."</p></div></div>
+        </div>
+      </div>
 
       <!-- ARCHER -->
       <div class="card" data-cat="grc" data-rel="stack" data-name="archer rsa grc" data-tags="governance risk compliance policy audit">
@@ -278,6 +291,19 @@
         </div>
       </div>
 
+      <!-- BLOODHOUND CE -->
+      <div class="card" data-cat="ispm" data-rel="direct" data-name="bloodhound ce community edition specterops" data-tags="attack path graph open source red team free manual">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-direct"></span><span class="comp-name">BloodHound CE (Community)</span><span class="cat-tag">Attack Path Graph</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-direct">Direct competitor</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Free, open-source attack-path graph — the red-team standard. Manual, point-in-time collection; no scheduled re-evaluation or remediation workflow.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"BloodHound CE is the red-team standard for seeing attack paths — manually, at a point in time. Saporo runs it on a schedule with chokepoint prioritization, remediation, and exec reporting, no specialist operators needed. If BH is in play, that's a great ICP signal — they already get attack paths; sell the operationalization."</p></div></div>
+        </div>
+      </div>
+
       <!-- BLOODHOUND -->
       <div class="card" data-cat="ispm" data-rel="direct" data-name="bloodhound enterprise specterops" data-tags="attack path graph azure ad red team">
         <div class="card-header" onclick="toggle(this)">
@@ -285,11 +311,11 @@
         </div>
         <div class="card-body">
           <span class="rel-label rel-label-direct">Direct competitor</span>
-          <div class="section"><div class="section-label">What they do</div><div class="section-text">Graph-based attack path analysis for AD and Azure AD. Well-known in offensive security / red team circles via the open-source BloodHound tool.</div></div>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">SpecterOps' paid SaaS attack-path platform — chokepoint scoring and Tier-0 blast radius. Scaling fast ($75M Series B); OpenGraph now adds Okta, GitHub &amp; Mac (Mar 2026) — so don't pitch it as AD-only.</div></div>
           <div class="divider"></div>
-          <div class="section"><div class="section-label">Strengths / Gaps</div><div class="pills"><span class="pill pill-s">Security research credibility</span><span class="pill pill-s">Graph-based approach</span><span class="pill pill-g">More analyst-driven, less operationalized</span><span class="pill pill-g">Narrower coverage (AD/Azure only)</span><span class="pill pill-g">No enterprise-scale remediation workflows</span></div></div>
+          <div class="section"><div class="section-label">Strengths / Gaps</div><div class="pills"><span class="pill pill-s">Practitioner credibility (original attack-path graph)</span><span class="pill pill-s">Chokepoint scoring</span><span class="pill pill-g">More analyst-driven, less operationalized</span><span class="pill pill-g">Lighter Business-Impact safety checks</span><span class="pill pill-g">Coverage expanding fast — don't fight on coverage</span></div></div>
           <div class="divider"></div>
-          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"BloodHound is great for analysts who want to see attack paths. Saporo is built for the team that needs to fix them at scale — with prioritization that tells you the 5 changes that eliminate 80% of risk. BloodHound shows you the map; Saporo hands you the navigation."</p><p>"Open-source BH users are a good ICP signal — they already get attack paths. Sell them enterprise operationalization."</p></div></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"BloodHound has real practitioner credibility — respect it, then lead with chokepoint economics and Business Impact, not coverage claims that will age. Saporo brings deeper misconfig coverage out of the box (ADCS, SMB shares, AWS, M365), Business-Impact checks before a fix is applied, scheduled re-evaluation, and an on-prem option."</p><p>"Community or Enterprise? How often is it run, and who owns remediation between runs? That's where Saporo's operationalization wins."</p></div></div>
         </div>
       </div>
 
@@ -315,9 +341,9 @@
         </div>
         <div class="card-body">
           <span class="rel-label rel-label-stack">Complementary / already in account</span>
-          <div class="section"><div class="section-label">What they do</div><div class="section-text">Market-leading EDR/XDR with identity threat protection module (Falcon Identity). Deployed in most enterprise accounts. Identity module detects identity-based attacks in motion.</div></div>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Market-leading EDR/XDR with an identity threat-detection module (Falcon Identity). Doubling down on real-time identity — acquired SGNL ($740M) — but still detection-led, not attack-path-led.</div></div>
           <div class="divider"></div>
-          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"CrowdStrike is excellent — complementary, not competitive. Falcon catches threats in motion. Saporo eliminates the misconfigurations that make those threats possible. Falcon is the alarm system; Saporo is removing the unlocked windows."</p></div></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"CrowdStrike is excellent — complementary, not competitive. Falcon catches threats in motion; Saporo works pre-breach, reducing the paths that drive those identity alerts and the lateral-movement blast radius. Falcon is the alarm system; Saporo removes the unlocked windows."</p><p>"Which recurring identity alerts could be prevented outright by removing the underlying attack path?"</p></div></div>
         </div>
       </div>
 
@@ -370,6 +396,19 @@
           <div class="section"><div class="section-label">What they do</div><div class="section-text">Network security vendor — NGFWs, SD-WAN, SASE. Common in mid-market and enterprise. Identity security is not a strength of the FortiGuard portfolio.</div></div>
           <div class="divider"></div>
           <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Fortinet is network-centric. Identity attack path management is not part of their portfolio. Fortinet accounts often have an underserved identity risk problem — strong Saporo entry point."</div></div>
+        </div>
+      </div>
+
+      <!-- HORIZON3 -->
+      <div class="card" data-cat="vuln" data-rel="adjacent" data-name="horizon3 horizon3.ai nodezero autonomous pentest" data-tags="ctem validation autonomous pentest exploitability exposure">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-adjacent"></span><span class="comp-name">Horizon3.ai (NodeZero)</span><span class="cat-tag">CTEM / Validation</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-adjacent">Adjacent / sometimes compared</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Autonomous pentesting / continuous validation (NodeZero) — proves exploitability by safely executing attacks. Broader than identity.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"Horizon3 proves a path is exploitable by running it — that answers 'is this real?', not 'which few fixes remove the most risk?' Saporo maps ALL identity paths and the chokepoints that collapse the most, not only what a given run touched. Mature programs run both."</p></div></div>
         </div>
       </div>
 
@@ -426,6 +465,19 @@
           <div class="section"><div class="section-label">Their gaps vs. Saporo</div><div class="pills"><span class="pill pill-g">No attack path computation or visualization</span><span class="pill pill-g">No chokepoint prioritization</span><span class="pill pill-g">Blind to on-prem AD cross-environment paths</span><span class="pill pill-g">Secure Score = checkbox, not risk priority</span></div></div>
           <div class="divider"></div>
           <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"Entra tells you your current configuration — it doesn't show you how an attacker chains those configurations together to reach a Domain Controller. Saporo maps those paths and tells you which five changes collapse 80% of the risk."</p><p>Discovery question: "How does your Microsoft tooling tell you which misconfigurations could be chained to reach your most critical assets?"</p></div></div>
+        </div>
+      </div>
+
+      <!-- MICROSOFT SECURITY EXPOSURE MANAGEMENT -->
+      <div class="card" data-cat="vuln" data-rel="adjacent" data-name="microsoft security exposure management msem" data-tags="exposure graph ctem microsoft e5 attack surface estate">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-adjacent"></span><span class="comp-name">Microsoft Security Exposure Management</span><span class="cat-tag">Exposure Mgmt</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-adjacent">Adjacent / sometimes compared</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Microsoft-native exposure graph across the estate, consolidating Defender / Entra / Intune signals. Typically tied to E5.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"MS Security Exposure Management is strong inside the Microsoft estate. Saporo is vendor-neutral with identity-first depth across non-Microsoft sources — AD, Entra, AWS, Okta, ADCS — and no E5 dependency. In hybrid, multi-vendor environments the depth and independence gap shows quickly."</p></div></div>
         </div>
       </div>
 
@@ -520,6 +572,19 @@
         </div>
       </div>
 
+      <!-- PENTERA -->
+      <div class="card" data-cat="vuln" data-rel="adjacent" data-name="pentera automated security validation" data-tags="ctem validation autonomous pentest exploitability ai">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-adjacent"></span><span class="comp-name">Pentera</span><span class="cat-tag">CTEM / Validation</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-adjacent">Adjacent / sometimes compared</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Automated security validation / autonomous pentest — proves exploitability by safely attacking the environment. Raised $60M for AI-led validation. Broader than identity.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"Pentera proves exploitability — it shows a path is real. The open question is: across ALL identity paths, which few fixes remove the most? That's Saporo. Validation proves a path is real; Saporo names the chokepoints that close the most. Mature programs run both."</p></div></div>
+        </div>
+      </div>
+
       <!-- PING IDENTITY -->
       <div class="card" data-cat="iam" data-rel="stack" data-name="ping identity forgerock" data-tags="iam federation sso enterprise identity">
         <div class="card-header" onclick="toggle(this)">
@@ -530,6 +595,32 @@
           <div class="section"><div class="section-label">What they do</div><div class="section-text">Enterprise IAM platform — SSO, federation, MFA, CIAM. ForgeRock merged with Ping Identity (2023). Common in large financial services and telco accounts with complex federation requirements.</div></div>
           <div class="divider"></div>
           <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Ping/ForgeRock is authentication infrastructure. Saporo sits on top — it reads identity data and maps attack paths regardless of the underlying IAM platform. Complementary by design."</div></div>
+        </div>
+      </div>
+
+      <!-- PINGCASTLE -->
+      <div class="card" data-cat="ad" data-rel="adjacent" data-name="pingcastle netwrix ad assessment score" data-tags="active directory assessment score posture audit health check">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-adjacent"></span><span class="comp-name">PingCastle</span><span class="cat-tag">AD Posture</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-adjacent">Adjacent / sometimes compared</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Fast, cheap, ubiquitous AD assessment &amp; scoring (now part of Netwrix). Point-in-time directory health score.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"PingCastle gives a fast, ubiquitous AD score — meet the buyer there, then expand. The real question is a one-time score vs. ongoing, prioritized reduction of real reachability to Tier-0. Saporo delivers scheduled attack-path reduction with broad hybrid coverage, and cuts audit prep from 4–8 weeks to 3–5 days."</p></div></div>
+        </div>
+      </div>
+
+      <!-- PURPLE KNIGHT / FOREST DRUID -->
+      <div class="card" data-cat="ad" data-rel="adjacent" data-name="purple knight forest druid semperis" data-tags="active directory entra indicators exposure tier-0 free snapshot ad posture">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-adjacent"></span><span class="comp-name">Purple Knight / Forest Druid</span><span class="cat-tag">AD Posture</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-adjacent">Adjacent / sometimes compared</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Free Semperis tools — Purple Knight scores AD/Entra indicators of exposure &amp; compromise; Forest Druid maps Tier-0 attack paths. Point-in-time snapshots.</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"Purple Knight and Forest Druid give a great free snapshot. Saporo turns that point-in-time picture into prioritized, tracked hardening across the full hybrid surface — chokepoints, remediation workflows, and measured reduction over time."</p></div></div>
         </div>
       </div>
 
@@ -646,11 +737,11 @@
         </div>
         <div class="card-body">
           <span class="rel-label rel-label-adjacent">Adjacent / sometimes compared</span>
-          <div class="section"><div class="section-label">What they do</div><div class="section-text">Unified identity protection — MFA enforcement for legacy systems, adaptive authentication, lateral movement detection. Strong US brand. Enforcement-layer play, not posture/attack path.</div></div>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Unified identity protection — MFA enforcement for legacy systems, adaptive authentication, lateral-movement detection. Acquired Rezonate and now markets a "complete identity security platform" with posture (ISPM) claims — but the core remains runtime enforcement.</div></div>
           <div class="divider"></div>
-          <div class="section"><div class="section-label">Strengths / Gaps</div><div class="pills"><span class="pill pill-s">Strong US market presence</span><span class="pill pill-s">Real-time enforcement, legacy MFA</span><span class="pill pill-g">Enforcement layer — not attack path posture</span><span class="pill pill-g">Different buyer (IAM vs. security posture)</span></div></div>
+          <div class="section"><div class="section-label">Strengths / Gaps</div><div class="pills"><span class="pill pill-s">Strong US market presence</span><span class="pill pill-s">Real-time enforcement, legacy MFA</span><span class="pill pill-g">Posture is a bolt-on, not the core</span><span class="pill pill-g">Lighter attack-path depth &amp; chokepoint prioritization</span></div></div>
           <div class="divider"></div>
-          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"Silverfort is an enforcement play — it controls authentication. Saporo is a posture play — it eliminates the misconfigurations that make accounts exploitable. If both are in play: Silverfort enforces; Saporo ensures there's nothing dangerous left to enforce against."</p></div></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"Silverfort enforces at runtime — and post-Rezonate it now talks posture too. The question is depth: attack-path analysis and chokepoint prioritization are Saporo's core, not a bolt-on module. Saporo reduces exposure upstream of runtime; if both are in play, Saporo ensures there's nothing dangerous left to enforce against."</p></div></div>
         </div>
       </div>
 
@@ -695,6 +786,19 @@
         </div>
       </div>
 
+      <!-- VARONIS -->
+      <div class="card" data-cat="cloud" data-rel="stack" data-name="varonis data security access graph" data-tags="data security dspm access governance who has access sensitive data">
+        <div class="card-header" onclick="toggle(this)">
+          <span class="rel-dot rel-stack"></span><span class="comp-name">Varonis</span><span class="cat-tag">Data Security</span><span class="chevron">&#9660;</span>
+        </div>
+        <div class="card-body">
+          <span class="rel-label rel-label-stack">Complementary / stack</span>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">Data-centric security — discovers and protects sensitive data and monitors access to it. Builds an access graph ("who can access what").</div></div>
+          <div class="divider"></div>
+          <div class="section"><div class="section-label">What to say</div><div class="stack-box">"Varonis secures the data and answers 'who has access to what' — an access graph. Saporo answers 'how does an attacker reach Domain Admin' — an attack graph — and removes those paths before the data is ever reached. Different layer, upstream of data security. Complementary."</div></div>
+        </div>
+      </div>
+
       <!-- WIZ -->
       <div class="card" data-cat="cloud" data-rel="stack" data-name="wiz cspm cnapp" data-tags="cloud security posture management cspm cnapp cloud risk workload">
         <div class="card-header" onclick="toggle(this)">
@@ -715,11 +819,11 @@
         </div>
         <div class="card-body">
           <span class="rel-label rel-label-adjacent">Adjacent / sometimes compared</span>
-          <div class="section"><div class="section-label">What they do</div><div class="section-text">Attack path simulation and exposure management across identity, vulnerabilities, and cloud misconfigs. Acquired by Schwarz Group ($700M). Strong US enterprise presence. Broad scope — identity is one module.</div></div>
+          <div class="section"><div class="section-label">What they do</div><div class="section-text">The most identity-aware CTEM — cross-domain attack-path modeling across identity, vulnerabilities, and cloud misconfigs. Acquired by Schwarz Group ($700M). Broad scope — identity is one module.</div></div>
           <div class="divider"></div>
-          <div class="section"><div class="section-label">Strengths / Gaps</div><div class="pills"><span class="pill pill-s">Well-funded, enterprise credibility</span><span class="pill pill-s">Broad attack surface coverage</span><span class="pill pill-g">Identity is a module, not the core</span><span class="pill pill-g">Less AD/Entra attack path depth</span></div></div>
+          <div class="section"><div class="section-label">Strengths / Gaps</div><div class="pills"><span class="pill pill-s">Well-funded, enterprise credibility</span><span class="pill pill-s">Broad, cross-domain CTEM coverage</span><span class="pill pill-g">Identity is a module, not the core</span><span class="pill pill-g">Less AD/Entra attack-path depth (ADCS ESC, RBCD, DCSync)</span></div></div>
           <div class="divider"></div>
-          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"XM Cyber is an exposure management platform that includes identity. Saporo is purpose-built for identity attack paths — deeper on AD, Entra, Okta, and AWS. If identity is their biggest risk surface, best-of-breed wins."</p></div></div>
+          <div class="section"><div class="section-label">What to say</div><div class="response-box"><p>"XM Cyber is the most identity-aware CTEM — credit where due. Saporo brings identity-specialist depth (ADCS ESC, RBCD, DCSync) and an identity-team remediation backlog, not a cross-domain module. If identity is the biggest risk surface, best-of-breed wins — and the two can run together."</p></div></div>
         </div>
       </div>
 
@@ -748,12 +852,12 @@
       <div class="ref-body">
         <div class="ref-section-label">Key differentiators</div>
         <div class="diff-grid">
-          <div class="diff-item"><div class="diff-num">01 — SCALE</div><div class="diff-text">In-memory graph engine processes billions of attack paths in real time. No other vendor matches this.</div></div>
-          <div class="diff-item"><div class="diff-num">02 — CHOKEPOINTS</div><div class="diff-text">One fix can collapse millions of paths. Minimum effort for maximum risk reduction.</div></div>
-          <div class="diff-item"><div class="diff-num">03 — HYBRID</div><div class="diff-text">On-prem AD + Entra + AWS + Okta in one native graph. Not bolted together.</div></div>
-          <div class="diff-item"><div class="diff-num">04 — REMEDIATION</div><div class="diff-text">Not just findings — triage-ready workflows with AI-assisted guidance.</div></div>
-          <div class="diff-item"><div class="diff-num">05 — OUTCOME</div><div class="diff-text">~80% of attack paths eliminated in year one. 140%+ NRR. 5.9M+ paths eliminated across customer base.</div></div>
-          <div class="diff-item"><div class="diff-num">STAT</div><div class="diff-text">~80% of cyber incidents are identity-based. 107% improvement in attack resistance per platform data.</div></div>
+          <div class="diff-item"><div class="diff-num">01 — SCALE</div><div class="diff-text">In-memory graph engine processes billions of attack paths; re-evaluated on a schedule (daily by default). Don't say "real-time."</div></div>
+          <div class="diff-item"><div class="diff-num">02 — CHOKEPOINTS</div><div class="diff-text">Names the 5–10 fixes that collapse the most Tier-0 paths. Minimum effort, maximum risk reduction.</div></div>
+          <div class="diff-item"><div class="diff-num">03 — HYBRID</div><div class="diff-text">On-prem AD + Entra + AWS + Okta + ADCS in one native attack graph. Not bolted together.</div></div>
+          <div class="diff-item"><div class="diff-num">04 — BUSINESS-SAFE</div><div class="diff-text">Business-Impact safety net warns whether a fix disrupts legitimate access before it's applied.</div></div>
+          <div class="diff-item"><div class="diff-num">05 — OUTCOMES</div><div class="diff-text">~27M paths eliminated day one · −80% attack surface / 12 mo · 75–95% of Tier-0 paths closed via 5–10 fixes · 5–10× hidden Tier-0 revealed.</div></div>
+          <div class="diff-item"><div class="diff-num">MARKET</div><div class="diff-text">71% of orgs hit by an identity breach last year; 67% of ransomware started with identity (Sophos, 2026). ~$13.7B → ~$33B PEM by 2029.</div></div>
         </div>
         <div class="ref-section-label">One-liners</div>
         <div class="liners-grid">
@@ -761,6 +865,35 @@
           <div class="liner-item"><div class="liner-ctx">CISO discovery</div><div class="liner-quote">"How confident are you that you'd know which identity misconfigurations in your environment could be chained together to reach a Domain Controller?"</div></div>
           <div class="liner-item"><div class="liner-ctx">Technical champion</div><div class="liner-quote">"Most tools give you a list of findings. Saporo gives you a graph — the same view an attacker has — and then shows you the chokepoints where one fix collapses millions of paths."</div></div>
           <div class="liner-item"><div class="liner-ctx">vs. CrowdStrike / EDR / "we have detection covered"</div><div class="liner-quote">"Those tools are excellent at detection and response. Saporo works upstream — it finds and eliminates the attack paths before they're exploited. Complementary, not competitive."</div></div>
+        </div>
+
+        <div class="ref-section-label">Qualify in 5 questions</div>
+        <div class="liners-grid">
+          <div class="liner-item"><div class="liner-ctx">01 · When is the tool used?</div><div class="liner-quote">Before vs. during the attack — Saporo: before (preemptive exposure reduction).</div></div>
+          <div class="liner-item"><div class="liner-ctx">02 · Which perimeter?</div><div class="liner-quote">External-facing vs. internal — Saporo: internal (identity is the perimeter).</div></div>
+          <div class="liner-item"><div class="liner-ctx">03 · Which assets?</div><div class="liner-quote">Only the vulnerable vs. all identities — Saporo: every identity.</div></div>
+          <div class="liner-item"><div class="liner-ctx">04 · Which identity problem?</div><div class="liner-quote">Authn · Authz · Permissions · Lifecycle — Saporo: permissions &amp; privileges (ISPM).</div></div>
+          <div class="liner-item"><div class="liner-ctx">05 · What kind of graph?</div><div class="liner-quote">Investigation · Access · Attack — Saporo: the attack graph.</div></div>
+        </div>
+
+        <div class="ref-section-label">Objection → reframe</div>
+        <div class="liners-grid">
+          <div class="liner-item"><div class="liner-ctx">"We already use BloodHound."</div><div class="liner-quote">Community or Enterprise? How often is it run? Who owns remediation once paths are found?</div></div>
+          <div class="liner-item"><div class="liner-ctx">"It's already in our E5."</div><div class="liner-quote">Does it give a prioritized attack-path remediation plan across non-Microsoft sources too?</div></div>
+          <div class="liner-item"><div class="liner-ctx">"We want one platform."</div><div class="liner-quote">Is it giving IAM and AD teams enough identity detail to fix the root cause?</div></div>
+          <div class="liner-item"><div class="liner-ctx">"We need detection / runtime."</div><div class="liner-quote">Which recurring identity alerts could be prevented by removing the underlying path?</div></div>
+          <div class="liner-item"><div class="liner-ctx">"We only need an AD score."</div><div class="liner-quote">A one-time score, or ongoing prioritized reduction of real reachability to Tier-0?</div></div>
+          <div class="liner-item"><div class="liner-ctx">"Pentera proves exploitability."</div><div class="liner-quote">Across ALL identity paths, which few fixes remove the most — not only what a run touched?</div></div>
+        </div>
+
+        <div class="ref-section-label">Landmines — don't</div>
+        <div class="diff-grid">
+          <div class="diff-item"><div class="diff-num">BLOODHOUND</div><div class="diff-text">Don't dismiss its credibility — respect it, then move to operationalization.</div></div>
+          <div class="diff-item"><div class="diff-num">MICROSOFT</div><div class="diff-text">Don't fight on price or breadth — prove the posture-depth and independence gap.</div></div>
+          <div class="diff-item"><div class="diff-num">CTEM</div><div class="diff-text">Don't argue against validation — position complement-not-replace.</div></div>
+          <div class="diff-item"><div class="diff-num">XDR / VARONIS</div><div class="diff-text">Don't position as a replacement — stay in the pre-attack identity posture lane.</div></div>
+          <div class="diff-item"><div class="diff-num">AD SCORE</div><div class="diff-text">Don't overcomplicate a simple AD health check — meet them there, expand later.</div></div>
+          <div class="diff-item"><div class="diff-num">LANGUAGE</div><div class="diff-text">Don't say "continuous" or "real-time" — the graph re-evaluates on a schedule (daily by default); only log collection is continuous.</div></div>
         </div>
       </div>
     </div>
