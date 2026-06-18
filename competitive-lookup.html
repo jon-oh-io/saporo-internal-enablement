@@ -23,26 +23,27 @@
   }
   body { font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
 
-  /* NAV */
-  nav { background:var(--surface); border-bottom:1px solid var(--border); padding:0 28px; display:flex; align-items:center; height:56px; position:sticky; top:0; z-index:100; box-shadow:0 1px 4px rgba(0,0,0,.06); }
-  .nav-logo { display:flex; align-items:center; gap:10px; margin-right:36px; text-decoration:none; }
-  .nav-logo-icon { width:30px; height:30px; flex-shrink:0; }
-  .nav-logo-text { display:flex; flex-direction:column; line-height:1; }
-  .nav-logo-text .brand { font-size:15px; font-weight:800; color:var(--text); letter-spacing:-0.3px; }
-  .nav-logo-text .sub { font-size:8px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-3); margin-top:2px; }
-  .nav-links { display:flex; align-items:center; height:100%; flex:1; }
-  .nav-link { padding:0 16px; height:56px; display:flex; align-items:center; font-size:13.5px; font-weight:500; color:var(--text-2); cursor:pointer; border-bottom:2px solid transparent; transition:color .15s,border-color .15s; white-space:nowrap; }
-  .nav-link:hover { color:var(--text); }
-  .nav-link.active { color:var(--red); border-bottom-color:var(--red); font-weight:600; }
-  .nav-right { display:flex; align-items:center; gap:8px; margin-left:auto; }
-  .nav-badge { font-size:11px; font-weight:700; background:var(--red); color:#fff; padding:3px 9px; border-radius:20px; }
-  .nav-tag { font-size:11px; font-weight:600; letter-spacing:0.6px; text-transform:uppercase; color:var(--text-3); background:var(--gray-bg); border:1px solid var(--border); padding:3px 9px; border-radius:4px; }
+  /* HEADER / persistent nav — identical to the enablement hub */
+  header { background:rgba(18,20,29,0.72); border-bottom:1px solid var(--border); padding:1.3rem 0; position:sticky; top:0; z-index:100; backdrop-filter:blur(10px); }
+  .nav-container { max-width:1020px; margin:0 auto; padding:0 20px; display:flex; align-items:center; justify-content:space-between; }
+  .logo-link { display:inline-flex; align-items:center; gap:0.7rem; text-decoration:none; }
+  .logo-mark { width:34px; height:34px; display:block; flex-shrink:0; }
+  .logo-text { display:flex; flex-direction:column; line-height:1; }
+  .logo-word { font-size:1.3rem; font-weight:800; letter-spacing:0.02em; color:var(--text); }
+  .logo-tag { font-family:'Roboto Mono',monospace; font-size:0.5rem; font-weight:500; letter-spacing:0.32em; text-transform:uppercase; color:var(--red); margin-top:3px; }
+  .site-nav { display:flex; align-items:center; gap:1.75rem; }
+  .site-nav a { position:relative; font-family:'Roboto Mono',monospace; font-size:0.74rem; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-2); text-decoration:none; padding:0.25rem 0; transition:color .15s; }
+  .site-nav a:hover { color:var(--text); }
+  .site-nav a.active { color:var(--text); }
+  .site-nav a.active::after { content:''; position:absolute; left:0; right:0; bottom:-3px; height:2px; background:var(--grad); }
+  /* live tool count, relocated from the old nav into the page header */
+  .count-pill { flex-shrink:0; font-family:'Roboto Mono',monospace; font-size:11px; font-weight:500; letter-spacing:0.04em; text-transform:uppercase; color:var(--red); background:var(--red-light); border:1px solid rgba(255,113,91,0.35); padding:4px 10px; border-radius:20px; white-space:nowrap; }
 
   /* PAGE */
   .page { max-width:1020px; margin:0 auto; padding:28px 20px 60px; }
   .score-bands { display:flex; height:5px; border-radius:3px; overflow:hidden; margin-bottom:20px; }
   .band { flex:1; }
-  .page-header { margin-bottom:22px; }
+  .page-header { margin-bottom:22px; display:flex; align-items:flex-start; justify-content:space-between; gap:16px; }
   .page-title { font-size:20px; font-weight:700; color:var(--text); letter-spacing:-0.3px; }
   .page-subtitle { font-size:13px; color:var(--text-2); margin-top:4px; }
 
@@ -161,47 +162,42 @@
     .gloss-grid { grid-template-columns:1fr; }
   }
   /* Saporo brand: mono treatment for labels (matches enablement hub) */
-  .nav-logo-text .sub, .nav-tag, .nav-badge, .section-label, .cat-tag, .rel-label,
+  .section-label, .cat-tag, .rel-label,
   .gloss-cat-badge, .liner-ctx, .diff-num, .ref-section-label { font-family:'Roboto Mono',monospace; }
 </style>
 </head>
 <body>
 
-<nav>
-  <a class="nav-logo" href="index.html" title="Back to Enablement Hub">
-    <svg class="nav-logo-icon" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M5 27 L13 19 L21 19 L29 11" stroke="#FF715B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
-      <path d="M5 11 L13 19 M21 19 L21 27" stroke="#F5F6FA" stroke-width="1.4" stroke-linecap="round" opacity="0.35"/>
-      <circle cx="5"  cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
-      <circle cx="13" cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
-      <circle cx="21" cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
-      <circle cx="29" cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
-      <circle cx="5"  cy="11" r="2"   fill="#F5F6FA"/>
-      <circle cx="29" cy="11" r="2.4" fill="#5132C0"/>
-      <circle cx="13" cy="19" r="2.4" fill="#FF715B"/>
-      <circle cx="21" cy="19" r="2.4" fill="#FF715B"/>
-      <circle cx="5"  cy="27" r="2.4" fill="#FF715B"/>
-      <circle cx="21" cy="27" r="2"   fill="#F5F6FA"/>
-      <circle cx="29" cy="27" r="1.7" fill="#F5F6FA" opacity="0.45"/>
-      <circle cx="13" cy="27" r="1.7" fill="#F5F6FA" opacity="0.45"/>
-    </svg>
-    <div class="nav-logo-text">
-      <span class="brand">SAPORO</span>
-      <span class="sub">Order in Chaos</span>
-    </div>
-  </a>
-  <div class="nav-links">
-    <div class="nav-link">Home</div>
-    <div class="nav-link">Findings</div>
-    <div class="nav-link">Explore</div>
-    <div class="nav-link">Analytics</div>
-    <div class="nav-link active">Competitive</div>
+<header>
+  <div class="nav-container">
+    <a class="logo-link" href="index.html" title="Back to Enablement Hub">
+      <svg class="logo-mark" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M5 27 L13 19 L21 19 L29 11" stroke="#FF715B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+        <path d="M5 11 L13 19 M21 19 L21 27" stroke="#F5F6FA" stroke-width="1.4" stroke-linecap="round" opacity="0.35"/>
+        <circle cx="5"  cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
+        <circle cx="13" cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
+        <circle cx="21" cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
+        <circle cx="29" cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
+        <circle cx="5"  cy="11" r="2"   fill="#F5F6FA"/>
+        <circle cx="29" cy="11" r="2.4" fill="#5132C0"/>
+        <circle cx="13" cy="19" r="2.4" fill="#FF715B"/>
+        <circle cx="21" cy="19" r="2.4" fill="#FF715B"/>
+        <circle cx="5"  cy="27" r="2.4" fill="#FF715B"/>
+        <circle cx="21" cy="27" r="2"   fill="#F5F6FA"/>
+        <circle cx="29" cy="27" r="1.7" fill="#F5F6FA" opacity="0.45"/>
+        <circle cx="13" cy="27" r="1.7" fill="#F5F6FA" opacity="0.45"/>
+      </svg>
+      <span class="logo-text">
+        <span class="logo-word">SAPORO</span>
+        <span class="logo-tag">Order in Chaos</span>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="index.html">Home</a>
+      <a href="competitive-lookup.html" class="active">Competitive</a>
+    </nav>
   </div>
-  <div class="nav-right">
-    <span class="nav-badge" id="countBadge">40 tools</span>
-    <span class="nav-tag">Live Call Ref</span>
-  </div>
-</nav>
+</header>
 
 <div class="page">
   <div class="score-bands">
@@ -214,8 +210,11 @@
   </div>
 
   <div class="page-header">
-    <div class="page-title">Security Landscape Reference</div>
-    <div class="page-subtitle">Tools, competitive positioning, and acronym glossary — for use on live calls.</div>
+    <div>
+      <div class="page-title">Security Landscape Reference</div>
+      <div class="page-subtitle">Tools, competitive positioning, and acronym glossary — for use on live calls.</div>
+    </div>
+    <span class="count-pill" id="countBadge">40 tools</span>
   </div>
 
   <div class="tab-bar">
