@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demo → POC Playbook | Saporo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Roboto+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="saporo.css" />
+  <style>
+    /* Page-specific styles — brand tokens, header/nav & footer live in saporo.css */
+    .container { max-width: var(--content-max); margin: 0 auto; padding: 0 var(--content-pad); }
+
+    /* ── Hero ───────────────────────────────────────────────────── */
+    .hero {
+      padding: 5rem 0 3.5rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -45%; right: -8%;
+      width: 520px; height: 520px;
+      background: radial-gradient(circle, rgba(143,45,240,0.16), transparent 68%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -55%; left: -10%;
+      width: 460px; height: 460px;
+      background: radial-gradient(circle, rgba(255,113,91,0.12), transparent 70%);
+      pointer-events: none;
+    }
+    .hero .container { position: relative; z-index: 1; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.72rem; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--coral); margin-bottom: 1.4rem;
+    }
+    .hero-eyebrow::before {
+      content: ''; display: block;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--coral); box-shadow: 0 0 12px var(--coral);
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 800; line-height: 1.08;
+      color: var(--off-white); letter-spacing: -0.035em;
+      margin-bottom: 1.4rem;
+    }
+    .hero h1 span {
+      background: var(--grad);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+    }
+    .hero-sub { font-size: 1.12rem; color: var(--gray-light); font-weight: 400; max-width: 640px; }
+
+    /* ── At-a-glance strip ──────────────────────────────────────── */
+    .glance {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 2.5rem;
+    }
+    .glance-cell { background: var(--bg-2); padding: 1.2rem 1.4rem; }
+    .glance-cell .k {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--gray); margin-bottom: 0.5rem;
+    }
+    .glance-cell .v { font-size: 1.45rem; font-weight: 800; color: var(--off-white); letter-spacing: -0.02em; line-height: 1.1; }
+    .glance-cell .v small { display: block; font-size: 0.78rem; font-weight: 400; color: var(--gray-light); letter-spacing: 0; margin-top: 0.25rem; }
+
+    /* ── Section scaffolding ────────────────────────────────────── */
+    .section { padding: 3.25rem 0; border-bottom: 1px solid var(--border); }
+    .section:last-of-type { border-bottom: none; }
+    .section-label {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.72rem; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--coral); margin-bottom: 0.75rem;
+    }
+    .section h2 {
+      font-size: 1.7rem; font-weight: 800; color: var(--off-white);
+      letter-spacing: -0.025em; margin-bottom: 0.5rem;
+    }
+    .section > .container > p.lead { color: var(--gray-light); max-width: 680px; margin-bottom: 1.75rem; }
+
+    /* ── Phase card ─────────────────────────────────────────────── */
+    .phase {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem 2rem;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 1.1rem;
+    }
+    .phase::before {
+      content: ''; position: absolute;
+      left: 0; top: 0; bottom: 0; width: 3px;
+      background: var(--grad);
+    }
+    .phase-head { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.1rem; }
+    .phase-num {
+      flex-shrink: 0;
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: var(--bg-4);
+      border: 1px solid var(--gray-dim);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 700; font-size: 0.95rem; color: var(--coral);
+    }
+    .phase-head h3 { font-size: 1.18rem; font-weight: 700; color: var(--off-white); letter-spacing: -0.02em; }
+    .phase-head .when {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--gray); margin-top: 0.2rem;
+    }
+    .phase p { color: var(--cream); font-size: 0.95rem; }
+    .phase p + p { margin-top: 0.75rem; }
+
+    /* ── Step list ──────────────────────────────────────────────── */
+    .steps { list-style: none; counter-reset: step; display: grid; gap: 0.9rem; }
+    .steps > li {
+      position: relative;
+      padding-left: 2.6rem;
+    }
+    .steps > li::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute; left: 0; top: -0.1rem;
+      width: 1.7rem; height: 1.7rem;
+      border-radius: 50%;
+      background: var(--bg-4);
+      border: 1px solid var(--gray-dim);
+      color: var(--coral);
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.78rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .steps .step-t { display: block; font-weight: 700; color: var(--off-white); margin-bottom: 0.2rem; }
+    .steps p { color: var(--cream); font-size: 0.92rem; }
+    .steps p + p { margin-top: 0.5rem; }
+
+    /* ── Tables ─────────────────────────────────────────────────── */
+    .tbl-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; margin-top: 1.25rem; }
+    table { width: 100%; border-collapse: collapse; min-width: 520px; }
+    thead th {
+      text-align: left;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.64rem; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--gray);
+      background: var(--bg-3);
+      padding: 0.85rem 1.1rem;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    tbody td {
+      padding: 0.85rem 1.1rem;
+      font-size: 0.9rem; color: var(--cream);
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:nth-child(even) td { background: rgba(255,255,255,0.012); }
+    td .day-tag {
+      display: inline-block;
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 700; font-size: 0.8rem; color: var(--off-white);
+      white-space: nowrap;
+    }
+    td strong { color: var(--off-white); font-weight: 700; }
+
+    /* ── Timeline ───────────────────────────────────────────────── */
+    .timeline { display: grid; gap: 0; margin-top: 1.5rem; }
+    .tl-item {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 1.25rem;
+      position: relative;
+      padding-bottom: 1.5rem;
+    }
+    .tl-item:last-child { padding-bottom: 0; }
+    .tl-rail { position: relative; display: flex; flex-direction: column; align-items: flex-start; }
+    .tl-dot {
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--coral);
+      box-shadow: 0 0 0 4px rgba(255,113,91,0.15);
+      margin-top: 0.35rem; flex-shrink: 0; z-index: 1;
+    }
+    .tl-item:not(:last-child) .tl-rail::after {
+      content: ''; position: absolute;
+      left: 6px; top: 1.3rem; bottom: -1.5rem;
+      width: 2px; background: var(--border);
+    }
+    .tl-day {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--coral); margin-top: 0.15rem; font-weight: 500;
+    }
+    .tl-body h4 { font-size: 1rem; font-weight: 700; color: var(--off-white); margin-bottom: 0.25rem; }
+    .tl-body p { font-size: 0.9rem; color: var(--cream); }
+
+    /* ── Callout ────────────────────────────────────────────────── */
+    .callout {
+      display: flex; gap: 0.9rem;
+      background: var(--bg-3);
+      border: 1px solid var(--gray-dim);
+      border-left: 3px solid var(--coral);
+      border-radius: 10px;
+      padding: 1.1rem 1.3rem;
+      margin-top: 1.5rem;
+    }
+    .callout svg { flex-shrink: 0; color: var(--coral); margin-top: 2px; }
+    .callout p { font-size: 0.9rem; color: var(--cream); }
+    .callout strong { color: var(--off-white); }
+
+    /* ── Compliance cards ───────────────────────────────────────── */
+    .compliance-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.1rem; margin-top: 0.5rem; }
+    .comp-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.4rem 1.5rem;
+    }
+    .comp-card h4 {
+      font-size: 1.02rem; font-weight: 700; color: var(--off-white);
+      letter-spacing: -0.01em; margin-bottom: 0.55rem;
+    }
+    .comp-card p { font-size: 0.9rem; color: var(--cream); }
+    .cert-row { display: flex; align-items: center; justify-content: space-between; padding: 0.55rem 0; border-bottom: 1px solid var(--border); }
+    .cert-row:last-child { border-bottom: none; }
+    .cert-row span { font-size: 0.92rem; color: var(--off-white); font-weight: 500; }
+    .badge {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.6rem; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.3rem 0.6rem; border-radius: 999px; white-space: nowrap;
+    }
+    .badge.ok { color: var(--green); background: rgba(60,207,145,0.12); border: 1px solid rgba(60,207,145,0.35); }
+    .badge.pending { color: var(--orange); background: rgba(255,147,79,0.12); border: 1px solid rgba(255,147,79,0.35); }
+
+    /* ── Checklist ──────────────────────────────────────────────── */
+    .owner-pill {
+      display: inline-block;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--gray-light);
+      border: 1px solid var(--gray-dim);
+      border-radius: 6px; padding: 0.2rem 0.5rem; white-space: nowrap;
+    }
+
+    @media (max-width: 720px) {
+      .hero { padding: 3.5rem 0 2.5rem; }
+      .hero h1 { font-size: 2rem; }
+      .glance { grid-template-columns: repeat(2, 1fr); }
+      .phase { padding: 1.4rem 1.4rem 1.4rem 1.55rem; }
+      .compliance-grid { grid-template-columns: 1fr; }
+      .tl-item { grid-template-columns: 70px 1fr; gap: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Header / persistent nav ────────────────────────────────── -->
+  <header>
+    <div class="nav-wrap">
+      <a class="logo-link" href="index.html" aria-label="Saporo — Home">
+        <svg class="logo-mark" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M5 27 L13 19 L21 19 L29 11" stroke="#FF715B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+          <path d="M5 11 L13 19 M21 19 L21 27" stroke="#F5F6FA" stroke-width="1.4" stroke-linecap="round" opacity="0.35"/>
+          <circle cx="5"  cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
+          <circle cx="13" cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
+          <circle cx="21" cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
+          <circle cx="29" cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
+          <circle cx="5"  cy="11" r="2"   fill="#F5F6FA"/>
+          <circle cx="29" cy="11" r="2.4" fill="#5132C0"/>
+          <circle cx="13" cy="19" r="2.4" fill="#FF715B"/>
+          <circle cx="21" cy="19" r="2.4" fill="#FF715B"/>
+          <circle cx="5"  cy="27" r="2.4" fill="#FF715B"/>
+          <circle cx="21" cy="27" r="2"   fill="#F5F6FA"/>
+          <circle cx="29" cy="27" r="1.7" fill="#F5F6FA" opacity="0.45"/>
+          <circle cx="13" cy="27" r="1.7" fill="#F5F6FA" opacity="0.45"/>
+        </svg>
+        <span class="logo-text">
+          <span class="logo-word">SAPORO</span>
+          <span class="logo-tag">Order in Chaos</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="competitive-lookup.html">Competitive</a>
+        <a href="recon.html">Recon</a>
+        <a href="demo-to-poc.html" class="active">Demo &rarr; POC</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── Hero ──────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-eyebrow">Playbook</div>
+      <h1>From Demo to <span>POC to Decision</span></h1>
+      <p class="hero-sub">The Saporo POC playbook: how to move a prospect from the moment they confirm interest through a structured five-business-day evaluation that reaches a clear outcome.</p>
+
+      <div class="glance">
+        <div class="glance-cell">
+          <div class="k">POC length</div>
+          <div class="v">5 days<small>business days, Day 1 = deployment</small></div>
+        </div>
+        <div class="glance-cell">
+          <div class="k">Deployment call</div>
+          <div class="v">1 hr<small>morning US time</small></div>
+        </div>
+        <div class="glance-cell">
+          <div class="k">First analysis</div>
+          <div class="v">&lt; 1 hr<small>starts the POC clock</small></div>
+        </div>
+        <div class="glance-cell">
+          <div class="k">Target outcome</div>
+          <div class="v">Day 5<small>decision &amp; proposal</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Phase 1 ───────────────────────────────────────────────── -->
+  <section class="section">
+    <div class="container">
+      <p class="section-label">// phase 1</p>
+      <h2>Pre-Demo Preparation</h2>
+      <p class="lead">Before any demo, gather the following from the prospect — ideally confirmed via the SDR or in a pre-call exchange. Having this in hand lets you frame the deployment conversation naturally rather than starting from scratch afterward.</p>
+
+      <div class="phase">
+        <div class="phase-head">
+          <div class="phase-num">1</div>
+          <div>
+            <h3>Gather environment details</h3>
+            <div class="when">Before the demo</div>
+          </div>
+        </div>
+        <ul class="steps">
+          <li><span class="step-t">Employee count</span><p>Drives sizing and license scope.</p></li>
+          <li><span class="step-t">Existing identity data sources</span><p>Active Directory, Azure / Entra ID, Okta, AWS, and similar — determines which connectors to configure.</p></li>
+          <li><span class="step-t">Deployment preference</span><p>SaaS or on-premises. Sets the infrastructure and setup path.</p></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Phase 2 ───────────────────────────────────────────────── -->
+  <section class="section">
+    <div class="container">
+      <p class="section-label">// phase 2</p>
+      <h2>Post-Demo Handoff</h2>
+      <p class="lead">Same call, or within 24 hours. Momentum is the goal — lock the next step down before it cools.</p>
+
+      <div class="phase">
+        <div class="phase-head">
+          <div class="phase-num">2</div>
+          <div>
+            <h3>Four moves to close the loop</h3>
+            <div class="when">Same call &middot; within 24 hours</div>
+          </div>
+        </div>
+        <ul class="steps">
+          <li>
+            <span class="step-t">Book the deployment date on the call</span>
+            <p>Do not leave the next step open-ended. Get a date on the calendar before hanging up, scheduled for morning US time so Nicolas from Saporo's Switzerland-based team can join and assist. It is far easier to move a scheduled call than to chase a commitment later.</p>
+          </li>
+          <li>
+            <span class="step-t">Duplicate the template folder in the Sales SharePoint</span>
+            <p>Navigate to <strong>Sales SharePoint &gt; Documents &gt; Customers</strong>. Duplicate the template folder and rename the copy to the prospect's name.</p>
+          </li>
+          <li>
+            <span class="step-t">Confirm POC prerequisites</span>
+            <p>Using the POC prerequisites deck from the template folder, confirm or fill in the prerequisites below with the prospect. Adapt the deck to their specific environment before sending.</p>
+          </li>
+          <li>
+            <span class="step-t">Grant documentation access</span>
+            <p>In HubSpot, open the prospect's contact profile and enable the <strong>"Public Documentation"</strong> attribute. This gives them access to Saporo's documentation outside the support portal, avoiding any SLA obligations tied to support tickets. Send the link directly in your follow-up email — include a PDF export or direct link. Do not assume they will find it on their own.</p>
+          </li>
+        </ul>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>Prerequisite</th><th>Why it matters</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Data sources in scope</strong></td><td>Determines which connectors to configure during deployment.</td></tr>
+              <tr><td><strong>Deployment model</strong> (SaaS vs. on-prem)</td><td>Drives infrastructure and setup steps.</td></tr>
+              <tr><td><strong>User / employee count</strong></td><td>Sizing and license scope.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Phase 3 ───────────────────────────────────────────────── -->
+  <section class="section">
+    <div class="container">
+      <p class="section-label">// phase 3</p>
+      <h2>The Deployment Call — Day 1</h2>
+      <p class="lead">A guided, hands-on walkthrough conducted on the prospect's machine. Schedule for morning US time so Nicolas from Saporo can join from Switzerland.</p>
+
+      <div class="phase">
+        <div class="phase-head">
+          <div class="phase-num">3</div>
+          <div>
+            <h3>Deploy and kick off the first run</h3>
+            <div class="when">Day 1 &middot; 1 hour</div>
+          </div>
+        </div>
+        <ul class="steps">
+          <li><span class="step-t">Walk through installation end-to-end</span><p>Conduct the full install live on the prospect's machine during the call.</p></li>
+          <li><span class="step-t">Start the first analysis</span><p>The POC officially begins once the machine is deployed and the first analysis run is initiated.</p></li>
+          <li><span class="step-t">Review initial results if time allows</span><p>The first analysis typically completes in under an hour. If there is time on the same call, begin reviewing initial results.</p></li>
+        </ul>
+        <div class="callout">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <p><strong>The clock starts here.</strong> The five-business-day window begins at the deployment call, not at the demo — anchor the prospect's expectations to Day 1 being deployment day.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Phase 4 ───────────────────────────────────────────────── -->
+  <section class="section">
+    <div class="container">
+      <p class="section-label">// phase 4</p>
+      <h2>POC Execution Window</h2>
+      <p class="lead">The standard POC runs five business days — enough time for the prospect to evaluate meaningfully while keeping the urgency to reach a decision. A focused window produces better outcomes than an open-ended evaluation.</p>
+
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-rail"><div class="tl-dot"></div><div class="tl-day">Day 1</div></div>
+          <div class="tl-body"><h4>Deployment call</h4><p>Machine live, first analysis running. The POC clock starts.</p></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-rail"><div class="tl-dot"></div><div class="tl-day">Days 2&ndash;3</div></div>
+          <div class="tl-body"><h4>Initial results review</h4><p>Explore the platform, walk through findings, and answer baseline questions.</p></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-rail"><div class="tl-dot"></div><div class="tl-day">Days 4&ndash;5</div></div>
+          <div class="tl-body"><h4>Deep dive &amp; proposal</h4><p>Address additional technical questions, validate against their environment, and move to proposal.</p></div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <p><strong>Default to a decision at the end of Day 5.</strong> Extensions and additional accommodations are available on a case-by-case basis, but the default expectation should hold.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Phase 5 ───────────────────────────────────────────────── -->
+  <section class="section">
+    <div class="container">
+      <p class="section-label">// phase 5</p>
+      <h2>Post-Deployment Review</h2>
+      <p class="lead">Schedule the first review call as soon as the initial analysis completes. The goal is to maintain momentum from Day 1 onward — do not let time pass between deployment and the first look at results.</p>
+
+      <div class="phase">
+        <div class="phase-head">
+          <div class="phase-num">5</div>
+          <div>
+            <h3>Keep the momentum</h3>
+            <div class="when">Immediately after first analysis</div>
+          </div>
+        </div>
+        <p>Book the first review while you are still on the deployment call, before leaving. The fastest path to a decision is an unbroken chain of scheduled touchpoints from deployment through proposal.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Compliance ────────────────────────────────────────────── -->
+  <section class="section">
+    <div class="container">
+      <p class="section-label">// compliance &amp; documentation</p>
+      <h2>Handle These Proactively</h2>
+      <p class="lead">Address each of these before a prospect raises it. Getting ahead of compliance questions keeps the five-day window on track.</p>
+
+      <div class="compliance-grid">
+        <div class="comp-card">
+          <h4>NDAs</h4>
+          <p>Saporo can sign an NDA if the prospect requires it, but the preference is to avoid where possible. For on-premises deployments this is often straightforward to resolve: the platform and all data live entirely within the prospect's own infrastructure, so nothing leaves their environment that would require protection.</p>
+        </div>
+        <div class="comp-card">
+          <h4>Security questionnaires</h4>
+          <p>A dedicated LLM-trained platform is available to help draft answers. Use it to accelerate turnaround rather than answering from scratch.</p>
+        </div>
+        <div class="comp-card">
+          <h4>Certifications</h4>
+          <div class="cert-row"><span>ISO 27001</span><span class="badge ok">Available now</span></div>
+          <div class="cert-row"><span>SOC 2</span><span class="badge pending">In progress &middot; est. Aug 2026</span></div>
+        </div>
+        <div class="comp-card">
+          <h4>Documentation access</h4>
+          <p>Enabled in HubSpot on the contact's profile, not via the support portal. Send the link proactively with a PDF export or direct link — customers rarely seek it out on their own.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Checklist ─────────────────────────────────────────────── -->
+  <section class="section">
+    <div class="container">
+      <p class="section-label">// poc checklist</p>
+      <h2>End-to-End Checklist</h2>
+      <p class="lead">The full sequence at a glance — owner and the trigger that marks each step done.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Step</th><th>Owner</th><th>Done when</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Environment details gathered (data sources, deployment model, user count)</td><td><span class="owner-pill">AE / SE</span></td><td>Before or during demo</td></tr>
+            <tr><td>Deployment date booked (morning US time)</td><td><span class="owner-pill">AE</span></td><td>Before demo call ends</td></tr>
+            <tr><td>Template folder duplicated and renamed in SharePoint</td><td><span class="owner-pill">SE</span></td><td>Within 24 hours of demo</td></tr>
+            <tr><td>POC prerequisites deck adapted and sent</td><td><span class="owner-pill">SE</span></td><td>Before deployment call</td></tr>
+            <tr><td>Documentation access enabled in HubSpot</td><td><span class="owner-pill">SE</span></td><td>Before deployment call</td></tr>
+            <tr><td>Deployment call completed; first analysis running</td><td><span class="owner-pill">SE + Nicolas</span></td><td>End of Day 1</td></tr>
+            <tr><td>Initial review scheduled</td><td><span class="owner-pill">AE</span></td><td>Before leaving deployment call</td></tr>
+            <tr><td>Deep dive completed; proposal ready</td><td><span class="owner-pill">AE / SE</span></td><td>End of Day 5</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ─────────────────────────────────────────────────── -->
+  <footer>
+    <div class="nav-wrap">
+      <a class="logo-link footer-left" href="index.html" aria-label="Saporo — Home">
+        <svg class="logo-mark" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M5 27 L13 19 L21 19 L29 11" stroke="#FF715B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+          <path d="M5 11 L13 19 M21 19 L21 27" stroke="#F5F6FA" stroke-width="1.4" stroke-linecap="round" opacity="0.35"/>
+          <circle cx="5"  cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
+          <circle cx="13" cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
+          <circle cx="21" cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
+          <circle cx="29" cy="5"  r="1.7" fill="#F5F6FA" opacity="0.45"/>
+          <circle cx="5"  cy="11" r="2"   fill="#F5F6FA"/>
+          <circle cx="29" cy="11" r="2.4" fill="#5132C0"/>
+          <circle cx="13" cy="19" r="2.4" fill="#FF715B"/>
+          <circle cx="21" cy="19" r="2.4" fill="#FF715B"/>
+          <circle cx="5"  cy="27" r="2.4" fill="#FF715B"/>
+          <circle cx="21" cy="27" r="2"   fill="#F5F6FA"/>
+          <circle cx="29" cy="27" r="1.7" fill="#F5F6FA" opacity="0.45"/>
+          <circle cx="13" cy="27" r="1.7" fill="#F5F6FA" opacity="0.45"/>
+        </svg>
+        <span class="logo-text">
+          <span class="logo-word">SAPORO</span>
+          <span class="logo-tag">Order in Chaos</span>
+        </span>
+      </a>
+      <p>Internal Enablement Hub · June 2026</p>
+    </div>
+  </footer>
+
+</body>
+</html>
